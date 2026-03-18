@@ -1,0 +1,94 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  LECTURER
+  STUDENT
+}
+
+model User {
+  id          String   @id @default(uuid())
+  clerkUserId String   @unique
+  email       String   @unique
+  firstName   String?
+  lastName    String?
+  role        Role     @default(STUDENT)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  assignedCourses CourseLecturer[]
+  enrollments     Enrollment[]
+  proctorLogs     ProctorLog[]
+}
+
+model Course {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  lecturers CourseLecturer[]
+  students  Enrollment[]
+  exams     Exam[]
+}
+
+// Granular Sharing: Admin assigns Lecturer to Course
+model CourseLecturer {
+  id         String   @id @default(uuid())
+  courseId   String
+  lecturerId String
+  assignedAt DateTime @default(now())
+
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lecturer User   @relation(fields: [lecturerId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, lecturerId])
+}
+
+// Course Encapsulation: Students in Course
+model Enrollment {
+  id         String   @id @default(uuid())
+  courseId   String
+  studentId  String
+  enrolledAt DateTime @default(now())
+
+  course  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  student User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, studentId])
+}
+
+model Exam {
+  id        String   @id @default(uuid())
+  courseId  String
+  title     String
+  startTime DateTime
+  endTime   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  course      Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  proctorLogs ProctorLog[]
+}
+
+// Record exam infractions like tab-switching and face-loss
+model ProctorLog {
+  id             String   @id @default(uuid())
+  examId         String
+  studentId      String
+  infractionType String   // "TAB_SWITCH", "FACE_LOSS", "MULTIPLE_FACES", etc.
+  details        String?  // JSON or text context
+  timestamp      DateTime @default(now())
+
+  exam    Exam @relation(fields: [examId], references: [id], onDelete: Cascade)
+  student User @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
