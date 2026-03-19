@@ -1,10 +1,50 @@
-export default function LecturerPage() {
-    return (
-        <div className="grid gap-6">
-            <div className="p-6 bg-accent/30 rounded-lg border border-secondary text-foreground">
-                <h2 className="text-xl font-medium mb-2 text-primary">Overview</h2>
-                <p>Welcome to the Lecturer Portal. From here you can manage your assigned courses, create exams, and review Proctor Logs for cheating infractions.</p>
-            </div>
+"use client";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { useRef } from "react";
+import { BookOpen, FileText, ShieldAlert } from "lucide-react";
+
+gsap.registerPlugin(useGSAP);
+
+export default function LecturerOverview() {
+  const container = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.from(".metric-card", { y: 20, opacity: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" });
+  }, { scope: container });
+
+  return (
+    <div ref={container} className="max-w-6xl mx-auto space-y-8 font-sans">
+      <div>
+        <h1 className="text-4xl font-black text-[#4A3131] tracking-tight">Lecturer Overview</h1>
+        <p className="text-[#5D6065] text-lg mt-2 font-medium">Monitor your assigned courses, active provisions, and AI proctoring anomalies seamlessly.</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="metric-card bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] flex flex-col items-center text-center hover:shadow-md transition">
+          <div className="w-16 h-16 bg-[#F4EFEA] rounded-2xl flex items-center justify-center mb-4 border border-[#E4D4CC]">
+            <BookOpen className="w-8 h-8 text-[#4A3131]" />
+          </div>
+          <h3 className="text-[#5D6065] font-bold text-sm uppercase tracking-widest mb-1">My Courses</h3>
+          <p className="text-4xl font-black text-[#4A3131]">-</p>
         </div>
-    );
+
+        <div className="metric-card bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] flex flex-col items-center text-center hover:shadow-md transition">
+          <div className="w-16 h-16 bg-[#F4EFEA] rounded-2xl flex items-center justify-center mb-4 border border-[#E4D4CC]">
+            <FileText className="w-8 h-8 text-[#4A3131]" />
+          </div>
+          <h3 className="text-[#5D6065] font-bold text-sm uppercase tracking-widest mb-1">Active Exams</h3>
+          <p className="text-4xl font-black text-[#4A3131]">-</p>
+        </div>
+
+        <div className="metric-card bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] flex flex-col items-center text-center hover:shadow-md hover:border-red-200 transition">
+          <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mb-4 border border-red-100">
+            <ShieldAlert className="w-8 h-8 text-red-600" />
+          </div>
+          <h3 className="text-red-600 font-bold text-sm uppercase tracking-widest mb-1">Unresolved Flags</h3>
+          <p className="text-4xl font-black text-red-600">0</p>
+        </div>
+      </div>
+    </div>
+  );
 }
