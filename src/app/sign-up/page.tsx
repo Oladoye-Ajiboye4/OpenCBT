@@ -36,7 +36,7 @@ export default function SignUpPage() {
     const validation = signUpSchema.safeParse({ email, password, confirmPassword });
     if (!validation.success) {
       const formattedErrors: Record<string, string> = {};
-      validation.error.errors.forEach(err => {
+      validation.error.errors.forEach((err: any) => {
         if (err.path[0]) formattedErrors[err.path[0].toString()] = err.message;
       });
       setFieldErrors(formattedErrors);

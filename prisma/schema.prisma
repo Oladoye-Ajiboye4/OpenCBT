@@ -8,84 +8,74 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-enum Role {
-  ADMIN
-  LECTURER
-}
-
 model Institution {
-  id                   String   @id @default("global")
-  name                 String   // e.g., "Ladoke Akintola University of Technology"
-  ictEmail             String   // e.g., "exams@lautech.edu.ng"
-  matricMode           String   @default("MANUAL") // "MANUAL" or "AUTO"
-  matricSerialTracker  Int      @default(0) // Tracks the last used serial
-  updatedAt            DateTime @updatedAt
+  id                  String   @id @default("global")
+  name                String
+  ictEmail            String
+  updatedAt           DateTime @updatedAt
+  matricMode          String   @default("MANUAL")
+  matricSerialTracker Int      @default(0)
 }
-
 
 model User {
-  id          String   @id
-  email       String   @unique
-  name        String?
-  staffId     String?  @unique
-  role        Role     @default(ADMIN)
-  departmentId String? // Added for Lecturer relation to Department
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  department      Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
-  createdCourses  Course[]  @relation("AdminCourses")
-  assignedCourses Course[]  @relation("LecturerCourses")
+  id              String      @id
+  email           String      @unique
+  staffId         String?     @unique
+  role            Role        @default(ADMIN)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  departmentId    String?
+  name            String?
+  createdCourses  Course[]    @relation("CourseAdmin")
+  assignedCourses Course[]    @relation("CourseLecturer")
+  department      Department? @relation(fields: [departmentId], references: [id])
 }
 
 model Faculty {
   id          String       @id @default(cuid())
-  name        String       @unique // e.g., "Computing and Informatics"
+  name        String       @unique
   departments Department[]
 }
 
 model Department {
-  id          String     @id @default(cuid())
-  name        String     @unique // e.g., "Computer Science"
-  facultyId   String
-  faculty     Faculty    @relation(fields: [facultyId], references: [id], onDelete: Cascade)
-  students    Student[]
-  lecturers   User[]     // Relation to User where role=LECTURER
-  courses     Course[]
+  id        String    @id @default(cuid())
+  name      String    @unique
+  facultyId String
+  courses   Course[]
+  faculty   Faculty   @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  students  Student[]
+  lecturers User[]
 }
 
 model Student {
-  id           String   @id @default(uuid())
-  matricNumber String   @unique
+  id           String       @id @default(uuid())
+  matricNumber String       @unique
   firstName    String
   lastName     String
-  departmentId String
   level        String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
-
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  departmentId String
   enrollments  Enrollment[]
   proctorLogs  ProctorLog[]
+  department   Department   @relation(fields: [departmentId], references: [id], onDelete: Cascade)
 }
 
 model Course {
-  id          String   @id @default(uuid())
-  code        String   @unique
-  title       String
-  adminId     String
-  lecturerId  String?
+  id           String       @id @default(cuid())
+  code         String       @unique
+  title        String
+  adminId      String?
+  lecturerId   String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
   departmentId String
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  department  Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
-  admin       User     @relation("AdminCourses", fields: [adminId], references: [id], onDelete: Cascade)
-  lecturer    User?    @relation("LecturerCourses", fields: [lecturerId], references: [id], onDelete: SetNull)
-  students    Enrollment[]
-  exams       Exam[]
+  level        String
+  admin        User?        @relation("CourseAdmin", fields: [adminId], references: [id], onDelete: Cascade)
+  department   Department   @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  lecturer     User?        @relation("CourseLecturer", fields: [lecturerId], references: [id])
+  students     Enrollment[]
+  exams        Exam[]
 }
 
 model Enrollment {
@@ -93,22 +83,20 @@ model Enrollment {
   courseId   String
   studentId  String
   enrolledAt DateTime @default(now())
-
-  course  Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@unique([courseId, studentId])
 }
 
 model Exam {
-  id        String   @id @default(uuid())
-  courseId  String
-  title     String
-  startTime DateTime
-  endTime   DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id          String       @id @default(uuid())
+  courseId    String
+  title       String
+  startTime   DateTime
+  endTime     DateTime
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   course      Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
   proctorLogs ProctorLog[]
 }
@@ -117,12 +105,11 @@ model ProctorLog {
   id             String   @id @default(uuid())
   examId         String
   studentId      String
-  infractionType String   
-  details        String?  
+  infractionType String
+  details        String?
   timestamp      DateTime @default(now())
-
-  exam    Exam    @relation(fields: [examId], references: [id], onDelete: Cascade)
-  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  exam           Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model ExamToken {
@@ -133,4 +120,9 @@ model ExamToken {
   isUsed       Boolean  @default(false)
   expiresAt    DateTime
   createdAt    DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  LECTURER
 }

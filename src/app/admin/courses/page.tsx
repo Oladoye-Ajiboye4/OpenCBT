@@ -1,38 +1,129 @@
 "use client";
+
+import { useState, useRef, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { useRef, useState } from "react";
-import { BookOpen, PlusCircle } from "lucide-react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { BookOpen, PlusCircle, Trash2, Edit2, UploadCloud } from "lucide-react";
+import { toast } from "react-hot-toast";
 
-const courseSchema = z.object({
-  code: z.string().min(3, "Course code required (e.g. CSC301)"),
-  title: z.string().min(3, "Title required"),
-  lecturerId: z.string().min(1, "Assign a Lecturer"),
-});
-
-type CourseFormValues = z.infer<typeof courseSchema>;
+import { 
+  getFaculties, 
+  getDepartments, 
+  getCourses, 
+  createCourse, 
+  deleteCourse 
+} from "@/actions/course";
+import { LecturerCombobox } from "@/components/admin/LecturerCombobox";
+import { BulkCourseUpload } from "@/components/admin/BulkCourseUpload";
 
 export default function ManageCourses() {
   const container = useRef<HTMLDivElement>(null);
-  const [courses, setCourses] = useState([
-    { id: "1", code: "CSC301", title: "Data Structures", lecturer: "Dr. Alan Turing" }
-  ]);
 
-  const { register, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm<CourseFormValues>({
-    resolver: zodResolver(courseSchema)
-  });
+  // Filters
+  const [faculties, setFaculties] = useState<any[]>([]);
+  const [departments, setDepartments] = useState<any[]>([]);
+  const [courses, setCourses] = useState<any[]>([]);
+  
+  const [selectedFaculty, setSelectedFaculty] = useState("");
+  const [selectedDept, setSelectedDept] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState("");
+
+  const [loadingCourses, setLoadingCourses] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isBulkOpen, setIsBulkOpen] = useState(false);
+
+  // Dummy Admin ID for now (Assuming we get from auth)
+  const [adminId, setAdminId] = useState("global"); 
+
+  useEffect(() => {
+    getFaculties().then(setFaculties);
+  }, []);
+
+  useEffect(() => {
+    if (selectedFaculty) {
+      getDepartments(selectedFaculty).then(setDepartments);
+      setSelectedDept("");
+      setSelectedLevel("");
+      setCourses([]);
+    } else {
+      setDepartments([]);
+      setSelectedDept("");
+      setSelectedLevel("");
+      setCourses([]);
+    }
+  }, [selectedFaculty]);
+
+  const fetchCourses = async () => {
+    if (selectedFaculty && selectedDept && selectedLevel) {
+      setLoadingCourses(true);
+      const data = await getCourses({
+        facultyId: selectedFaculty,
+        departmentId: selectedDept,
+        level: selectedLevel
+      });
+      setCourses(data);
+      setLoadingCourses(false);
+    } else {
+      setCourses([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourses();
+  }, [selectedFaculty, selectedDept, selectedLevel]);
 
   useGSAP(() => {
     gsap.from(".anim-item", { y: 20, opacity: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" });
   }, { scope: container });
 
-  const onSubmit = async (data: CourseFormValues) => {
-    await new Promise(r => setTimeout(r, 1000));
-    setCourses(prev => [...prev, { id: Date.now().toString(), code: data.code, title: data.title, lecturer: data.lecturerId }]);
-    reset();
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!selectedDept || !selectedLevel) {
+      toast.error("Please select a Department and Level from the filters above.");
+      return;
+    }
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    
+    const code = formData.get("code") as string;
+    const title = formData.get("title") as string;
+    const lecturerId = formData.get("lecturerId") as string;
+
+    if (!code || !title) {
+      toast.error("Code and Title are required.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const res = await createCourse({
+      code,
+      title,
+      departmentId: selectedDept,
+      level: selectedLevel,
+      adminId,
+      lecturerId: lecturerId || null
+    });
+    setIsSubmitting(false);
+
+    if (res.error) {
+      toast.error(res.error);
+    } else {
+      toast.success(res.message);
+      form.reset();
+      fetchCourses();
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this course?")) return;
+    const res = await deleteCourse(id);
+    if (res.success) {
+      toast.success(res.message);
+      fetchCourses();
+    } else {
+      toast.error(res.message);
+    }
   };
 
   return (
@@ -41,6 +132,59 @@ export default function ManageCourses() {
         <div>
           <h1 className="text-4xl font-black text-[#4A3131] tracking-tight">Manage Courses</h1>
           <p className="text-[#5D6065] text-lg mt-2 font-medium">Create enterprise courses and assign designated faculty natively.</p>
+        </div>
+        <button 
+          onClick={() => setIsBulkOpen(true)}
+          className="bg-white border-2 border-[#E4D4CC] text-[#4A3131] hover:bg-[#F4EFEA] hover:border-[#4A3131] px-5 py-3 rounded-xl font-bold flex items-center gap-2 transition"
+        >
+          <UploadCloud className="w-5 h-5" />
+          Bulk Upload Courses
+        </button>
+      </div>
+
+      <div className="bg-white p-6 rounded-3xl shadow-sm border border-[#E4D4CC] anim-item flex gap-4">
+        <div className="flex-1">
+          <label className="block text-sm font-bold text-[#5D6065] mb-2">Faculty</label>
+          <select 
+            value={selectedFaculty} 
+            onChange={e => setSelectedFaculty(e.target.value)}
+            className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium bg-white"
+          >
+            <option value="">Select Faculty...</option>
+            {faculties.map(f => (
+              <option key={f.id} value={f.id}>{f.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="flex-1">
+          <label className="block text-sm font-bold text-[#5D6065] mb-2">Department</label>
+          <select 
+            value={selectedDept} 
+            onChange={e => setSelectedDept(e.target.value)}
+            disabled={!selectedFaculty}
+            className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium bg-white disabled:opacity-50"
+          >
+            <option value="">Select Department...</option>
+            {departments.map(d => (
+              <option key={d.id} value={d.id}>{d.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="flex-1">
+          <label className="block text-sm font-bold text-[#5D6065] mb-2">Level</label>
+          <select 
+            value={selectedLevel} 
+            onChange={e => setSelectedLevel(e.target.value)}
+            disabled={!selectedDept}
+            className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium bg-white disabled:opacity-50"
+          >
+            <option value="">Select Level...</option>
+            <option value="100L">100 Level</option>
+            <option value="200L">200 Level</option>
+            <option value="300L">300 Level</option>
+            <option value="400L">400 Level</option>
+            <option value="500L">500 Level</option>
+          </select>
         </div>
       </div>
 
@@ -52,62 +196,125 @@ export default function ManageCourses() {
             </div>
             <h2 className="text-xl font-bold text-[#4A3131]">Deploy Course</h2>
           </div>
-          <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-            <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">Course Code</label>
-              <input {...register("code")} className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-mono font-bold uppercase tracking-wider" placeholder="CSC301" />
-              {errors.code && <p className="text-red-500 text-xs mt-1 font-bold">{errors.code.message}</p>}
+          
+          {(!selectedDept || !selectedLevel) ? (
+            <div className="p-4 bg-[#F4EFEA] border border-[#E4D4CC] rounded-xl text-center text-sm font-bold text-[#5D6065]">
+              Select a Department and Level above to create a course.
             </div>
-            <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">Course Title</label>
-              <input {...register("title")} className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium" placeholder="Data Structures" />
-              {errors.title && <p className="text-red-500 text-xs mt-1 font-bold">{errors.title.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">Assign Lecturer</label>
-              <select {...register("lecturerId")} className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium bg-white appearance-none">
-                 <option value="">Select Faculty...</option>
-                 <option value="Dr. Alan Turing">Dr. Alan Turing</option>
-                 <option value="Dr. Grace Hopper">Dr. Grace Hopper</option>
-              </select>
-              {errors.lecturerId && <p className="text-red-500 text-xs mt-1 font-bold">{errors.lecturerId.message}</p>}
-            </div>
+          ) : (
+            <form className="space-y-4" onSubmit={onSubmit}>
+              <div>
+                <label className="block text-sm font-bold text-[#5D6065] mb-2">Course Code</label>
+                <input name="code" required className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-mono font-bold uppercase tracking-wider" placeholder="CSC301" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-[#5D6065] mb-2">Course Title</label>
+                <input name="title" required className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium" placeholder="Data Structures" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold text-[#5D6065] mb-2">Assign Lecturer</label>
+                {/* Need to implement a hidden input to hold the LecturerCombobox value so FormData works */}
+                <LecturerComboboxWrapper departmentId={selectedDept} />
+              </div>
 
-            <button type="submit" disabled={isSubmitting} className="w-full py-4 mt-6 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition h-14">
-              {isSubmitting ? "Deploying..." : "Publish Course"}
-            </button>
-          </form>
+              <button type="submit" disabled={isSubmitting} className="w-full py-4 mt-6 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition h-14 disabled:opacity-70 disabled:cursor-not-allowed">
+                {isSubmitting ? (
+                  <div className="flex justify-center items-center">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  </div>
+                ) : "Publish Course"}
+              </button>
+            </form>
+          )}
         </div>
 
         <div className="xl:col-span-2 bg-white rounded-3xl shadow-sm border border-[#E4D4CC] overflow-hidden anim-item">
           <div className="p-6 border-b border-[#E4D4CC] bg-[#F4EFEA]/30">
             <h3 className="text-xl font-bold text-[#4A3131]">Active Deployments</h3>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto min-h-[300px]">
+            {(!selectedFaculty || !selectedDept || !selectedLevel) ? (
+               <div className="flex flex-col items-center justify-center p-12 text-[#5D6065]">
+                  <BookOpen className="w-12 h-12 mb-4 opacity-30" />
+                  <p className="font-bold text-lg">No Filters Selected</p>
+                  <p className="text-sm">Please select completely down to the Level to view courses.</p>
+               </div>
+            ) : loadingCourses ? (
+              <div className="flex justify-center p-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#4A3131]"></div>
+              </div>
+            ) : courses.length === 0 ? (
+               <div className="flex flex-col items-center justify-center p-12 text-[#5D6065]">
+                  <p className="font-bold text-lg text-[#4A3131]">No Courses Found</p>
+                  <p className="text-sm">There are no courses deployed for {selectedLevel} yet.</p>
+               </div>
+            ) : (
             <table className="w-full text-left text-sm text-[#5D6065]">
               <thead className="bg-[#F4EFEA] text-xs uppercase font-bold text-[#4A3131]">
                 <tr>
                   <th className="px-6 py-4">Course Code</th>
                   <th className="px-6 py-4">Course Title</th>
-                  <th className="px-6 py-4">Assigned Faculty</th>
+                  <th className="px-6 py-4">Assigned Lecturer</th>
+                  <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E4D4CC]">
                 {courses.map(c => (
-                  <tr key={c.id} className="hover:bg-[#F4EFEA]/20 transition">
+                  <tr key={c.id} className="hover:bg-[#F4EFEA]/20 transition group">
                     <td className="px-6 py-4 font-mono font-bold tracking-wide text-[#4A3131]">{c.code}</td>
                     <td className="px-6 py-4 font-bold">{c.title}</td>
-                    <td className="px-6 py-4 font-medium flex items-center gap-2">
-                       <div className="w-6 h-6 rounded-full bg-[#E4D4CC] flex items-center justify-center text-[10px] font-bold text-[#4A3131]">FC</div>
-                       {c.lecturer}
+                    <td className="px-6 py-4 font-medium">
+                       {c.lecturer ? (
+                         <div className="flex items-center gap-2">
+                           <div className="w-6 h-6 rounded-full bg-[#E4D4CC] flex items-center justify-center text-[10px] font-bold text-[#4A3131]">
+                             {(c.lecturer.name || "L").charAt(0).toUpperCase()}
+                           </div>
+                           {c.lecturer.name}
+                         </div>
+                       ) : (
+                         <div className="inline-flex items-center px-2 py-1 bg-gray-100 text-gray-500 rounded-md text-xs font-bold border border-gray-200">
+                           Unassigned
+                         </div>
+                       )}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                       <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition">
+                         <button className="p-2 text-[#5D6065] hover:bg-[#E4D4CC]/50 rounded-lg transition" title="Edit (Coming Soon)">
+                           <Edit2 className="w-4 h-4" />
+                         </button>
+                         <button onClick={() => handleDelete(c.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition" title="Delete Course">
+                           <Trash2 className="w-4 h-4" />
+                         </button>
+                       </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            )}
           </div>
         </div>
       </div>
+
+      <BulkCourseUpload 
+        isOpen={isBulkOpen}
+        onClose={() => setIsBulkOpen(false)}
+        facultyId={selectedFaculty}
+        departmentId={selectedDept}
+        level={selectedLevel}
+        adminId={adminId}
+        onSuccess={fetchCourses}
+      />
     </div>
+  );
+}
+
+function LecturerComboboxWrapper({ departmentId }: { departmentId: string }) {
+  const [val, setVal] = useState("");
+  return (
+    <>
+      <LecturerCombobox departmentId={departmentId} value={val} onChange={setVal} />
+      <input type="hidden" name="lecturerId" value={val} />
+    </>
   );
 }
