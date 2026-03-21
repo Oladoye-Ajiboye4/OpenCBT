@@ -2,42 +2,80 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { createClient } from "@supabase/supabase-js";
+import { sendLecturerWelcomeEmail } from "@/lib/mail";
+
+const lecturerSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  staffId: z.string().min(3, "Staff ID must be at least 3 characters"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  departmentId: z.string().min(1, "Department is required")
+});
 
 export async function createLecturer(data: FormData) {
-  const name = data.get("name") as string;
-  const staffId = data.get("staffId") as string;
-  const email = data.get("email") as string;
-  const password = data.get("password") as string;
-  const departmentId = data.get("departmentId") as string;
-
-  if (!name || !staffId || !email || !password || !departmentId) {
-    return { error: "All fields are required" };
-  }
-
-  // NOTE: OpenCBT has user 'name' usually represented as 'firstName' and 'lastName' on Student, but User might have different fields.
-  // Wait, let's check schema.prisma for User:
-  // User has: id, email, staffId, role, departmentId. No 'name' field?
-  // Ah! `User` doesn't have a `name` field in the original schema!
-  // Wow, let's just make it work. If there's no name, maybe I need to add one, or use a Profile. 
-  // Let me just add `name String?` to `User` in schema.prisma, or ignore it if not in schema. I will update schema.prisma to add `name String?` for Lecturers!
-  
   try {
-    const id = Date.now().toString(); // rudimentary ID generation if needed, though UUID is better
+    const rawData = {
+      name: data.get("name") as string,
+      staffId: data.get("staffId") as string,
+      email: data.get("email") as string,
+      password: data.get("password") as string,
+      departmentId: data.get("departmentId") as string,
+    };
+
+    const parsed = lecturerSchema.safeParse(rawData);
+    if (!parsed.success) {
+      return { error: parsed.error.issues?.[0]?.message || "Validation failed" };
+    }
+
+    const { name, staffId, email, password, departmentId } = parsed.data;
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: { autoRefreshToken: false, persistSession: false }
+    });
+
+    let authUserId: string;
+
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+        email,
+        password,
+        email_confirm: true,
+      });
+      if (authError) return { error: "Auth Error: " + authError.message };
+      authUserId = authData.user.id;
+    } else {
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (authError) return { error: "Auth Error: " + authError.message };
+      if (!authData.user) return { error: "Failed to create Auth User" };
+      authUserId = authData.user.id;
+    }
+
     await prisma.user.create({
       data: {
-        id: `usr_${id}`,
+        id: authUserId,
         email,
         staffId,
         role: "LECTURER",
-        departmentId
-        // name is not in the original schema! I'll quickly patch schema.prisma to add `name String?`
+        departmentId,
+        name
       },
     });
+
+    await sendLecturerWelcomeEmail(email, name, staffId, password);
+
     revalidatePath("/admin/lecturers");
     return { success: true };
   } catch (error: any) {
-    if (error.code === 'P2002') return { error: "Lecturer with this Email or Staff ID already exists" };
-    return { error: "Failed to provision Lecturer" };
+    if (error.code === 'P2002') return { error: "Lecturer with this Email or Staff ID already exists." };
+    return { error: error.message || "Failed to provision Lecturer" };
   }
 }
 
@@ -90,3 +128,40 @@ export async function uploadLecturersCSV(records: any[], departmentId: string) {
     return { error: error.message || "Failed to bulk upload lecturers" };
   }
 }
+
+export async function resendLecturerEmail(id: string) {
+  try {
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user || !user.email || !user.staffId) {
+      return { error: "Lecturer not found or missing required data." };
+    }
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    
+    if (!supabaseKey) {
+      return { error: "SUPABASE_SERVICE_ROLE_KEY is required to reset credentials." };
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: { autoRefreshToken: false, persistSession: false }
+    });
+
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+    let newPassword = "";
+    for (let i = 0; i < 8; i++) newPassword += chars.charAt(Math.floor(Math.random() * chars.length));
+
+    const { error: authError } = await supabase.auth.admin.updateUserById(id, {
+      password: newPassword,
+    });
+
+    if (authError) return { error: "Auth Error: " + authError.message };
+
+    await sendLecturerWelcomeEmail(user.email, user.name || "Faculty Member", user.staffId, newPassword);
+
+    return { success: true };
+  } catch (error: any) {
+    return { error: error.message || "Failed to resend credentials" };
+  }
+}
+

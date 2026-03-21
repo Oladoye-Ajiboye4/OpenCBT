@@ -3,8 +3,8 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef, useState, useMemo } from "react";
-import { UserPlus, FileSpreadsheet, UploadCloud, Search, Trash2, Loader2 } from "lucide-react";
-import { createLecturer, deleteLecturer, getLecturers, uploadLecturersCSV } from "@/actions/lecturer";
+import { UserPlus, FileSpreadsheet, UploadCloud, Search, Trash2, Loader2, Eye, EyeOff, Mail } from "lucide-react";
+import { createLecturer, deleteLecturer, getLecturers, uploadLecturersCSV, resendLecturerEmail } from "@/actions/lecturer";
 import Papa from "papaparse";
 import toast from "react-hot-toast";
 
@@ -29,6 +29,37 @@ export function LecturersClient({ faculties }: { faculties: Faculty[] }) {
   // CSV Modal State
   const [csvDeptId, setCsvDeptId] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+
+  // Security & Resend State
+  const [showPassword, setShowPassword] = useState(false);
+  const [resendingId, setResendingId] = useState<string | null>(null);
+
+  const handleResendEmail = async (id: string) => {
+    setResendingId(id);
+    try {
+      const res = await resendLecturerEmail(id);
+      if (res?.error) toast.error(res.error);
+      else toast.success("Welcome email resent successfully!");
+    } catch {
+      toast.error("Network error. Please try again.");
+    } finally {
+      setResendingId(null);
+    }
+  };
+
+  const handleGenerateStaffId = () => {
+    const generatedId = `STF-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const input = document.getElementById("staffIdInput") as HTMLInputElement;
+    if (input) input.value = generatedId;
+  };
+
+  const handleGeneratePassword = () => {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+    let password = "";
+    for (let i = 0; i < 8; i++) password += chars.charAt(Math.floor(Math.random() * chars.length));
+    const input = document.getElementById("passwordInput") as HTMLInputElement;
+    if (input) input.value = password;
+  };
 
   const filterDepartments = useMemo(() => faculties.find(f => f.id === filterFacultyId)?.departments || [], [filterFacultyId, faculties]);
   const createDepartments = useMemo(() => faculties.find(f => f.id === createFacId)?.departments || [], [createFacId, faculties]);
@@ -172,8 +203,11 @@ export function LecturersClient({ faculties }: { faculties: Faculty[] }) {
                 <input type="email" name="email" required placeholder="jane@opencbt.edu" className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none text-[#4A3131] font-medium" />
               </div>
               <div>
-                <label className="block text-sm font-bold text-[#5D6065] mb-2">Staff ID</label>
-                <input name="staffId" required placeholder="FAC-2051" className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none text-[#4A3131] font-medium uppercase" />
+                <div className="flex justify-between items-center mb-2">
+                  <label className="block text-sm font-bold text-[#5D6065]">Staff ID</label>
+                  <button type="button" onClick={handleGenerateStaffId} className="text-xs font-bold text-[#4A3131] hover:underline">Auto-Generate</button>
+                </div>
+                <input id="staffIdInput" name="staffId" required placeholder="FAC-2051" className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none text-[#4A3131] font-medium uppercase" />
               </div>
             </div>
             
@@ -192,8 +226,16 @@ export function LecturersClient({ faculties }: { faculties: Faculty[] }) {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">Temporary Password</label>
-              <input type="password" name="password" required className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none text-[#4A3131] font-medium" />
+              <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-bold text-[#5D6065]">Temporary Password</label>
+                <button type="button" onClick={handleGeneratePassword} className="text-xs font-bold text-[#4A3131] hover:underline">Auto-Generate</button>
+              </div>
+              <div className="relative">
+                <input id="passwordInput" type={showPassword ? "text" : "password"} name="password" required className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none text-[#4A3131] font-medium pr-10" />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5D6065] hover:text-[#4A3131]">
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
             </div>
 
             <button type="submit" disabled={isSubmitting} className="w-full py-4 mt-6 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition shadow-md shadow-[#4A3131]/20 disabled:opacity-70 flex justify-center items-center gap-2">
@@ -228,7 +270,10 @@ export function LecturersClient({ faculties }: { faculties: Faculty[] }) {
                       <td className="px-6 py-4 font-bold text-[#4A3131]">{l.name || "Lecturer"}</td>
                       <td className="px-6 py-4 font-medium">{l.email}</td>
                       <td className="px-6 py-4 font-mono font-bold tracking-wide">{l.staffId}</td>
-                      <td className="px-6 py-4 text-right opacity-0 group-hover:opacity-100 transition">
+                      <td className="px-6 py-4 text-right opacity-0 group-hover:opacity-100 transition flex justify-end gap-2">
+                        <button onClick={() => handleResendEmail(l.id)} disabled={resendingId === l.id} title="Resend Welcome Email" className="p-2 text-blue-500 hover:bg-blue-50 rounded-lg disabled:opacity-50">
+                          {resendingId === l.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
+                        </button>
                         <button onClick={() => handleDelete(l.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg">
                           <Trash2 className="w-4 h-4" />
                         </button>

@@ -1,49 +1,86 @@
-"use client";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { useRef } from "react";
+import { createClient } from "@/utils/supabase/server";
+import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 import { BookOpen, FileText, ShieldAlert } from "lucide-react";
 
-gsap.registerPlugin(useGSAP);
+export default async function LecturerOverview() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-export default function LecturerOverview() {
-  const container = useRef<HTMLDivElement>(null);
+  if (!user) redirect("/sign-in");
 
-  useGSAP(() => {
-    gsap.from(".metric-card", { y: 20, opacity: 0, duration: 0.6, stagger: 0.1, ease: "power3.out" });
-  }, { scope: container });
+  const lecturer = await prisma.user.findUnique({
+    where: { email: user.email! },
+    select: { id: true, name: true },
+  });
+
+  if (!lecturer) redirect("/sign-in");
+
+  const [totalCourses, activeExams] = await Promise.all([
+    prisma.course.count({ where: { lecturerId: lecturer.id } }),
+    prisma.exam.count({
+      where: {
+        course: { lecturerId: lecturer.id },
+        startTime: { lte: new Date() },
+        endTime: { gte: new Date() },
+      }
+    }),
+  ]);
+
+  const metrics = [
+    {
+      label: "My Courses",
+      value: totalCourses,
+      icon: <BookOpen className="w-8 h-8 text-[#4A3131]" />,
+      bg: "bg-[#F4EFEA]",
+      border: "border-[#E4D4CC]",
+      color: "text-[#4A3131]",
+      labelColor: "text-[#5D6065]",
+    },
+    {
+      label: "Active Exams",
+      value: activeExams,
+      icon: <FileText className="w-8 h-8 text-[#4A3131]" />,
+      bg: "bg-[#F4EFEA]",
+      border: "border-[#E4D4CC]",
+      color: "text-[#4A3131]",
+      labelColor: "text-[#5D6065]",
+    },
+    {
+      label: "Unresolved Flags",
+      value: 0,
+      icon: <ShieldAlert className="w-8 h-8 text-red-600" />,
+      bg: "bg-red-50",
+      border: "border-red-100",
+      color: "text-red-600",
+      labelColor: "text-red-600",
+    },
+  ];
 
   return (
-    <div ref={container} className="max-w-6xl mx-auto space-y-8 font-sans">
+    <div className="max-w-6xl mx-auto space-y-8 font-sans">
       <div>
-        <h1 className="text-4xl font-black text-[#4A3131] tracking-tight">Lecturer Overview</h1>
-        <p className="text-[#5D6065] text-lg mt-2 font-medium">Monitor your assigned courses, active provisions, and AI proctoring anomalies seamlessly.</p>
+        <h1 className="text-4xl font-black text-[#4A3131] tracking-tight">
+          Welcome, {lecturer.name || "Lecturer"}
+        </h1>
+        <p className="text-[#5D6065] text-lg mt-2 font-medium">
+          Monitor your assigned courses, active provisions, and AI proctoring anomalies seamlessly.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="metric-card bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] flex flex-col items-center text-center hover:shadow-md transition">
-          <div className="w-16 h-16 bg-[#F4EFEA] rounded-2xl flex items-center justify-center mb-4 border border-[#E4D4CC]">
-            <BookOpen className="w-8 h-8 text-[#4A3131]" />
+        {metrics.map((m) => (
+          <div
+            key={m.label}
+            className={`bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] flex flex-col items-center text-center hover:shadow-md transition`}
+          >
+            <div className={`w-16 h-16 ${m.bg} rounded-2xl flex items-center justify-center mb-4 border ${m.border}`}>
+              {m.icon}
+            </div>
+            <h3 className={`${m.labelColor} font-bold text-sm uppercase tracking-widest mb-1`}>{m.label}</h3>
+            <p className={`text-4xl font-black ${m.color}`}>{m.value}</p>
           </div>
-          <h3 className="text-[#5D6065] font-bold text-sm uppercase tracking-widest mb-1">My Courses</h3>
-          <p className="text-4xl font-black text-[#4A3131]">-</p>
-        </div>
-
-        <div className="metric-card bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] flex flex-col items-center text-center hover:shadow-md transition">
-          <div className="w-16 h-16 bg-[#F4EFEA] rounded-2xl flex items-center justify-center mb-4 border border-[#E4D4CC]">
-            <FileText className="w-8 h-8 text-[#4A3131]" />
-          </div>
-          <h3 className="text-[#5D6065] font-bold text-sm uppercase tracking-widest mb-1">Active Exams</h3>
-          <p className="text-4xl font-black text-[#4A3131]">-</p>
-        </div>
-
-        <div className="metric-card bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] flex flex-col items-center text-center hover:shadow-md hover:border-red-200 transition">
-          <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mb-4 border border-red-100">
-            <ShieldAlert className="w-8 h-8 text-red-600" />
-          </div>
-          <h3 className="text-red-600 font-bold text-sm uppercase tracking-widest mb-1">Unresolved Flags</h3>
-          <p className="text-4xl font-black text-red-600">0</p>
-        </div>
+        ))}
       </div>
     </div>
   );
