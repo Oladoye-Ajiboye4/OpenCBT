@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { LayoutDashboard, BookOpen, FileText, Key, ShieldAlert } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { LayoutDashboard, BookOpen, FileText, Key, ShieldAlert, LogOut } from "lucide-react";
+import { logout } from "@/actions/auth";
 
 export default function LecturerLayout({
   children,
@@ -10,6 +11,13 @@ export default function LecturerLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.refresh();
+    router.push("/sign-in");
+  };
 
   return (
     <div className="min-h-screen bg-[#F4EFEA] text-[#5D6065] flex flex-col font-sans">
@@ -67,6 +75,10 @@ export default function LecturerLayout({
           >
             <ShieldAlert className="w-5 h-5" /> Student Results
           </Link>
+          <button onClick={handleLogout} className="ml-4 px-5 py-2.5 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition-all shadow-[#4A3131]/20 shadow-md flex items-center gap-2 group">
+            <LogOut className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+            Logout
+          </button>
         </nav>
       </header>
 

@@ -13,16 +13,45 @@ enum Role {
   LECTURER
 }
 
+model Institution {
+  id                   String   @id @default("global")
+  name                 String   // e.g., "Ladoke Akintola University of Technology"
+  ictEmail             String   // e.g., "exams@lautech.edu.ng"
+  matricMode           String   @default("MANUAL") // "MANUAL" or "AUTO"
+  matricSerialTracker  Int      @default(0) // Tracks the last used serial
+  updatedAt            DateTime @updatedAt
+}
+
+
 model User {
   id          String   @id
   email       String   @unique
+  name        String?
   staffId     String?  @unique
   role        Role     @default(ADMIN)
+  departmentId String? // Added for Lecturer relation to Department
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  department      Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   createdCourses  Course[]  @relation("AdminCourses")
   assignedCourses Course[]  @relation("LecturerCourses")
+}
+
+model Faculty {
+  id          String       @id @default(cuid())
+  name        String       @unique // e.g., "Computing and Informatics"
+  departments Department[]
+}
+
+model Department {
+  id          String     @id @default(cuid())
+  name        String     @unique // e.g., "Computer Science"
+  facultyId   String
+  faculty     Faculty    @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  students    Student[]
+  lecturers   User[]     // Relation to User where role=LECTURER
+  courses     Course[]
 }
 
 model Student {
@@ -30,10 +59,12 @@ model Student {
   matricNumber String   @unique
   firstName    String
   lastName     String
-  department   String
+  departmentId String
   level        String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
 
   enrollments  Enrollment[]
   proctorLogs  ProctorLog[]
@@ -45,9 +76,12 @@ model Course {
   title       String
   adminId     String
   lecturerId  String?
+  departmentId String
+
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  department  Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
   admin       User     @relation("AdminCourses", fields: [adminId], references: [id], onDelete: Cascade)
   lecturer    User?    @relation("LecturerCourses", fields: [lecturerId], references: [id], onDelete: SetNull)
   students    Enrollment[]
