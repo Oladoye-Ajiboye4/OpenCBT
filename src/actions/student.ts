@@ -23,7 +23,7 @@ export async function createStudent(data: FormData) {
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.errors[0].message };
+    return { error: parsed.error.issues[0].message };
   }
 
   const { firstName, lastName, email, departmentId, level } = parsed.data;
@@ -33,14 +33,14 @@ export async function createStudent(data: FormData) {
     // Note: Assuming Admin ID or Global ID based on new schema fixes, we should fetch institution robustly
     const user = await prisma.user.findFirst({ where: { role: "ADMIN" } });
     if (!user) throw new Error("No Admin found for system parameters");
-    
+
     const institution = await prisma.institution.findUnique({ where: { adminId: user.id } }) || await prisma.institution.findFirst();
-    
+
     if (institution?.matricMode === "AUTO") {
       const year = new Date().getFullYear();
       const nextSerial = institution.matricSerialTracker + 1;
       matricNumber = `${year}${String(nextSerial).padStart(5, '0')}`;
-      
+
       await prisma.$transaction([
         prisma.student.create({
           data: { firstName, lastName, email, matricNumber, departmentId, level, id: Date.now().toString() }, // Ensure dummy ID or let Supabase auth insert ID. For admin inserts, if no auth is hooked, we need a unique ID.
@@ -124,13 +124,13 @@ export async function uploadStudentsCSV(records: any[], departmentId: string, le
         if (!record.firstName || !record.lastName) {
           throw new Error("CSV missing required columns");
         }
-        
+
         let matricNumber = record.matricNumber;
         if (isAuto) {
           currentSerial++;
           matricNumber = `${year}${String(currentSerial).padStart(5, '0')}`;
         } else if (!matricNumber) {
-           throw new Error("Matric Number missing in Manual Mode");
+          throw new Error("Matric Number missing in Manual Mode");
         }
 
         await tx.student.create({
