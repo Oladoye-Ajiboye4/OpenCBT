@@ -5,22 +5,32 @@ import { ProvisionClient } from "./ProvisionClient";
 
 export default async function ProvisionPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) redirect("/sign-in");
 
   const lecturer = await prisma.user.findUnique({
     where: { email: user.email! },
-    select: { id: true, departmentId: true },
+    select: { id: true },
   });
 
   if (!lecturer) redirect("/sign-in");
 
-  const courses = await prisma.course.findMany({
-    where: { lecturerId: lecturer.id },
-    select: { id: true, title: true, code: true },
-    orderBy: { createdAt: "desc" }
+  // Fetch all UPCOMING exams assigned to this lecturer, including course + department info
+  const upcomingExams = await prisma.exam.findMany({
+    where: {
+      status: "UPCOMING",
+      course: { lecturerId: lecturer.id },
+    },
+    include: {
+      course: {
+        include: { department: true },
+      },
+    },
+    orderBy: { scheduledDate: "asc" },
   });
 
-  return <ProvisionClient courses={courses} />;
+  return <ProvisionClient exams={upcomingExams} />;
 }
