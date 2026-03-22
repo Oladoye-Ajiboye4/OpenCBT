@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, Users, UserCheck, BookOpen, Settings } from "lucide-react";
+import { LayoutDashboard, Users, UserCheck, BookOpen, Settings, ClipboardCheck } from "lucide-react";
 import { LogoutButton } from "@/components/auth/LogoutButton";
 import { headers } from "next/headers";
 
@@ -16,6 +16,7 @@ export default async function AdminLayout({
     { href: "/admin/lecturers", label: "Lecturers", icon: <UserCheck className="w-5 h-5" /> },
     { href: "/admin/students", label: "Students", icon: <Users className="w-5 h-5" /> },
     { href: "/admin/courses", label: "Courses", icon: <BookOpen className="w-5 h-5" /> },
+    { href: "/admin/results", label: "Results", icon: <ClipboardCheck className="w-5 h-5" /> },
     { href: "/admin/settings", label: "Settings", icon: <Settings className="w-5 h-5" /> },
   ];
 
@@ -34,11 +35,10 @@ export default async function AdminLayout({
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-3 p-3.5 rounded-xl transition-all duration-300 font-bold ${
-                  isActive
+                className={`flex items-center gap-3 p-3.5 rounded-xl transition-all duration-300 font-bold ${isActive
                     ? "bg-[#4A3131] text-white shadow-md shadow-[#4A3131]/20"
                     : "text-[#5D6065] hover:bg-[#E4D4CC]/50 hover:text-[#4A3131]"
-                }`}
+                  }`}
               >
                 {icon}
                 {label}
@@ -48,7 +48,7 @@ export default async function AdminLayout({
         </nav>
 
         <div className="mt-auto w-full px-6 pt-10 pb-4">
-          <LogoutButton 
+          <LogoutButton
             className="flex items-center justify-center gap-3 w-full p-3.5 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition-all shadow-md shadow-[#4A3131]/20 group"
             iconClassName="w-5 h-5 group-hover:-translate-x-1 transition-transform"
           />

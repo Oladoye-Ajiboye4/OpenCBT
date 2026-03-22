@@ -89,6 +89,7 @@ export const sendLecturerWelcomeEmail = async (
 export const sendExamCredentialEmail = async (
   email: string,
   firstName: string,
+  matricNumber: string,
   examTitle: string,
   pin: string,
   scheduledDate: Date
@@ -146,6 +147,10 @@ export const sendExamCredentialEmail = async (
 
           <div>
             <div class="info-row">
+              <span class="info-label">Login Matric Number</span>
+              <span class="info-value">${matricNumber}</span>
+            </div>
+            <div class="info-row">
               <span class="info-label">Exam</span>
               <span class="info-value">${examTitle}</span>
             </div>
@@ -154,6 +159,10 @@ export const sendExamCredentialEmail = async (
               <span class="info-value">${formattedDate}</span>
             </div>
           </div>
+
+          <p style="margin-top: 18px; color: #5D6065; font-size: 14px;">
+            Login steps: Open portal, enter your Matric Number and PIN exactly as provided, then proceed to waiting room.
+          </p>
 
           <div style="text-align: center; margin-top: 28px;">
             <a href="${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/portal" class="portal-button">Access Examination Portal →</a>
@@ -183,5 +192,131 @@ export const sendExamCredentialEmail = async (
   } catch (error) {
     console.error("Failed to send exam credential email:", error);
     return { error: "Failed to send email" };
+  }
+};
+
+export const sendResultPublishedEmail = async ({
+  to,
+  studentName,
+  examTitle,
+  score,
+  totalMarks,
+}: {
+  to: string;
+  studentName: string;
+  examTitle: string;
+  score: number;
+  totalMarks: number;
+}) => {
+  const percentage = totalMarks > 0 ? Math.round((score / totalMarks) * 100) : 0;
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Exam Result Published</title>
+      <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F4EFEA; color: #4A3131; margin: 0; padding: 20px; }
+        .container { max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 16px; padding: 36px; border: 1px solid #E4D4CC; }
+        .title { font-size: 28px; font-weight: 900; margin: 0 0 8px; }
+        .subtitle { color: #5D6065; margin: 0 0 24px; }
+        .score-box { background: #F4EFEA; border: 1px solid #E4D4CC; border-radius: 14px; padding: 20px; text-align: center; }
+        .score { font-size: 40px; font-weight: 900; margin: 8px 0; }
+        .meta { color: #5D6065; font-size: 14px; }
+        .footer { margin-top: 28px; font-size: 13px; color: #8c8e91; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1 class="title">Result Published</h1>
+        <p class="subtitle">Hello ${studentName}, your final result has been released.</p>
+
+        <div class="score-box">
+          <p style="margin:0; font-weight:700;">${examTitle}</p>
+          <p class="score">${score} / ${totalMarks}</p>
+          <p class="meta">Overall: ${percentage}%</p>
+        </div>
+
+        <p style="margin-top:24px; color:#5D6065;">You can contact your lecturer if you need clarification on grading details.</p>
+        <p class="footer">This is an automated email from OpenCBT.</p>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: '"OpenCBT Results" <' + process.env.SMTP_USER + '>',
+      to,
+      subject: `Result Published: ${examTitle}`,
+      html: htmlContent,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to send result publication email:", error);
+    return { error: "Failed to send result publication email" };
+  }
+};
+
+export const sendStudentResultEmail = async (
+  email: string,
+  name: string,
+  courseCode: string,
+  score: number,
+  totalMarks: number
+) => {
+  const percentage = totalMarks > 0 ? Math.round((score / totalMarks) * 100) : 0;
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Verified Result Publication</title>
+      <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F4EFEA; color: #4A3131; margin: 0; padding: 20px; }
+        .container { max-width: 620px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #E4D4CC; padding: 34px; }
+        .badge { display: inline-block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 800; color: #4A3131; background: #F4EFEA; border: 1px solid #E4D4CC; border-radius: 999px; padding: 6px 12px; }
+        .title { margin: 14px 0 6px; font-size: 28px; font-weight: 900; color: #4A3131; }
+        .subtitle { margin: 0 0 20px; color: #5D6065; font-size: 15px; }
+        .score-box { background: #F9F3ED; border: 1px solid #E4D4CC; border-radius: 14px; padding: 22px; text-align: center; }
+        .course { font-size: 15px; font-weight: 700; color: #4A3131; }
+        .score { margin: 8px 0 4px; font-size: 42px; font-weight: 900; color: #4A3131; }
+        .meta { color: #6B5146; font-size: 14px; }
+        .footer { margin-top: 24px; color: #7C6A61; font-size: 13px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <span class="badge">Senate Verified</span>
+        <h1 class="title">Result Published</h1>
+        <p class="subtitle">Hello ${name}, your result has been verified and officially published by the Senate/Admin.</p>
+
+        <div class="score-box">
+          <p class="course">${courseCode}</p>
+          <p class="score">${score} / ${totalMarks}</p>
+          <p class="meta">Performance: ${percentage}%</p>
+        </div>
+
+        <p class="footer">If you have any concerns regarding your result, contact your department or assigned lecturer.</p>
+      </div>
+    </body>
+    </html>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: '"OpenCBT Senate Desk" <' + process.env.SMTP_USER + '>',
+      to: email,
+      subject: `Published Result: ${courseCode}`,
+      html: htmlContent,
+    });
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to dispatch result email." };
   }
 };

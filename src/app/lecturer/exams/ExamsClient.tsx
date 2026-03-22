@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef, useState } from "react";
@@ -68,8 +69,8 @@ export function ExamsClient({ courses, initialExams }: { courses: Course[], init
             <div>
               <label className="block text-sm font-bold text-[#5D6065] mb-2">Target Course</label>
               <select name="courseId" required className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium bg-white appearance-none">
-                 <option value="">Select Course...</option>
-                 {courses.map(c => <option key={c.id} value={c.id}>{c.code} - {c.title}</option>)}
+                <option value="">Select Course...</option>
+                {courses.map(c => <option key={c.id} value={c.id}>{c.code} - {c.title}</option>)}
               </select>
             </div>
             <div>
@@ -93,55 +94,76 @@ export function ExamsClient({ courses, initialExams }: { courses: Course[], init
           </div>
           <div className="overflow-x-auto">
             {initialExams.length === 0 ? (
-               <p className="text-[#5D6065] text-center p-8 font-medium">No exams deployed yet.</p>
+              <p className="text-[#5D6065] text-center p-8 font-medium">No exams deployed yet.</p>
             ) : (
-                <table className="w-full text-left text-sm text-[#5D6065]">
-                  <thead className="bg-[#F4EFEA] text-xs uppercase font-bold text-[#4A3131]">
-                    <tr>
-                      <th className="px-6 py-4">Linked Course</th>
-                      <th className="px-6 py-4">Exam Title</th>
-                      <th className="px-6 py-4">Schedule & Duration</th>
-                      <th className="px-6 py-4 text-center">Status</th>
-                      <th className="px-6 py-4 text-right">Actions</th>
+              <table className="w-full text-left text-sm text-[#5D6065]">
+                <thead className="bg-[#F4EFEA] text-xs uppercase font-bold text-[#4A3131]">
+                  <tr>
+                    <th className="px-6 py-4">Linked Course</th>
+                    <th className="px-6 py-4">Exam Title</th>
+                    <th className="px-6 py-4">Schedule & Duration</th>
+                    <th className="px-6 py-4 text-center">Status</th>
+                    <th className="px-6 py-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#E4D4CC]">
+                  {initialExams.map(e => (
+                    <tr key={e.id} className="hover:bg-[#F4EFEA]/20 transition group">
+                      <td className="px-6 py-4 font-mono font-bold tracking-wide text-[#4A3131]">{e.course.code}</td>
+                      <td className="px-6 py-4 font-bold text-[#4A3131]">{e.title}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-[#5D6065] mb-1">
+                          <Calendar className="w-3.5 h-3.5" />
+                          {new Date(e.scheduledDate).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+                        </div>
+                        <div className="flex items-center gap-1.5 text-xs font-medium text-[#5D6065]">
+                          <Clock className="w-3.5 h-3.5" />
+                          {e.duration} Mins
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-center">
+                        <span className={`px-2.5 py-1 rounded-lg font-bold text-[10px] uppercase tracking-wider ${e.status === 'UPCOMING' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' : e.status === 'ACTIVE' ? 'bg-green-50 text-green-700 border border-green-200 shadow-sm animate-pulse' : 'bg-gray-100 text-gray-700 border border-gray-200'}`}>{e.status}</span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Link
+                            href={`/lecturer/exams/${e.id}/questions`}
+                            className="text-xs font-bold px-2 py-1 rounded-lg border border-[#D9C9BC] text-[#4A3131] hover:bg-[#F4EFEA]"
+                          >
+                            Questions
+                          </Link>
+                          <Link
+                            href={`/lecturer/exams/${e.id}/results`}
+                            className="text-xs font-bold px-2 py-1 rounded-lg border border-[#D9C9BC] text-[#4A3131] hover:bg-[#F4EFEA]"
+                          >
+                            Results
+                          </Link>
+                          <Link
+                            href={`/lecturer/exams/${e.id}/monitor`}
+                            className="text-xs font-bold px-2 py-1 rounded-lg border border-[#D9C9BC] text-[#4A3131] hover:bg-[#F4EFEA]"
+                          >
+                            Live Monitor
+                          </Link>
+
+                          {e.status === 'UPCOMING' && (
+                            <button onClick={() => setStatus(e.id, 'ACTIVE')} className="text-green-600 hover:text-green-700 p-2 rounded-lg hover:bg-green-50 transition" title="Launch Exam">
+                              <PlayCircle className="w-5 h-5" />
+                            </button>
+                          )}
+                          {e.status === 'ACTIVE' && (
+                            <button onClick={() => setStatus(e.id, 'COMPLETED')} className="text-[#4A3131] hover:text-[#5a3f3f] p-2 rounded-lg hover:bg-[#E4D4CC]/40 transition" title="Complete Exam">
+                              <CheckCircle2 className="w-5 h-5" />
+                            </button>
+                          )}
+                          {e.status === 'COMPLETED' && (
+                            <span className="text-xs font-medium text-[#5D6065] italic mr-2">Locked</span>
+                          )}
+                        </div>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#E4D4CC]">
-                    {initialExams.map(e => (
-                      <tr key={e.id} className="hover:bg-[#F4EFEA]/20 transition group">
-                        <td className="px-6 py-4 font-mono font-bold tracking-wide text-[#4A3131]">{e.course.code}</td>
-                        <td className="px-6 py-4 font-bold text-[#4A3131]">{e.title}</td>
-                        <td className="px-6 py-4">
-                            <div className="flex items-center gap-1.5 text-xs font-bold text-[#5D6065] mb-1">
-                                <Calendar className="w-3.5 h-3.5" />
-                                {new Date(e.scheduledDate).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
-                            </div>
-                            <div className="flex items-center gap-1.5 text-xs font-medium text-[#5D6065]">
-                                <Clock className="w-3.5 h-3.5" />
-                                {e.duration} Mins
-                            </div>
-                        </td>
-                        <td className="px-6 py-4 text-center">
-                           <span className={`px-2.5 py-1 rounded-lg font-bold text-[10px] uppercase tracking-wider ${e.status === 'UPCOMING' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' : e.status === 'ACTIVE' ? 'bg-green-50 text-green-700 border border-green-200 shadow-sm animate-pulse' : 'bg-gray-100 text-gray-700 border border-gray-200'}`}>{e.status}</span>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                           {e.status === 'UPCOMING' && (
-                               <button onClick={() => setStatus(e.id, 'ACTIVE')} className="text-green-600 hover:text-green-700 p-2 rounded-lg hover:bg-green-50 transition" title="Launch Exam">
-                                   <PlayCircle className="w-5 h-5" />
-                               </button>
-                           )}
-                           {e.status === 'ACTIVE' && (
-                               <button onClick={() => setStatus(e.id, 'COMPLETED')} className="text-[#4A3131] hover:text-[#5a3f3f] p-2 rounded-lg hover:bg-[#E4D4CC]/40 transition" title="Complete Exam">
-                                   <CheckCircle2 className="w-5 h-5" />
-                               </button>
-                           )}
-                           {e.status === 'COMPLETED' && (
-                               <span className="text-xs font-medium text-[#5D6065] italic mr-2">Locked</span>
-                           )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                  ))}
+                </tbody>
+              </table>
             )}
           </div>
         </div>

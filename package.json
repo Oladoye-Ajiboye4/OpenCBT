@@ -14,6 +14,8 @@
     "@prisma/client": "^6.19.2",
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.99.3",
+    "@tensorflow-models/blazeface": "^0.1.0",
+    "@tensorflow/tfjs": "^4.22.0",
     "@types/nodemailer": "^7.0.11",
     "cross-fetch": "^4.1.0",
     "gsap": "^3.14.2",

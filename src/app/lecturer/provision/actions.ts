@@ -122,6 +122,7 @@ export async function provisionExamRoster(examId: string): Promise<{
       sendExamCredentialEmail(
         student.email,
         student.firstName,
+        student.matricNumber,
         exam.title,
         pin,
         exam.scheduledDate

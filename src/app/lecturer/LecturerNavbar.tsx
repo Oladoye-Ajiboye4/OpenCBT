@@ -10,7 +10,7 @@ const navLinks = [
   { href: "/lecturer/courses", label: "Assigned Courses", icon: <BookOpen className="w-5 h-5" /> },
   { href: "/lecturer/exams", label: "Exams", icon: <FileText className="w-5 h-5" /> },
   { href: "/lecturer/provision", label: "Enrollment & Provisioning", icon: <Key className="w-5 h-5" /> },
-  { href: "/lecturer/results", label: "Student Results", icon: <ShieldAlert className="w-5 h-5" /> },
+  { href: "/lecturer/flags", label: "Proctoring Flags", icon: <ShieldAlert className="w-5 h-5" /> },
 ];
 
 type Props = {
@@ -41,11 +41,10 @@ export function LecturerNavbar({ name, staffId }: Props) {
             <Link
               key={href}
               href={href}
-              className={`px-4 py-2.5 rounded-xl transition duration-300 font-bold flex items-center gap-2 ${
-                isActive
+              className={`px-4 py-2.5 rounded-xl transition duration-300 font-bold flex items-center gap-2 ${isActive
                   ? "bg-[#4A3131] text-white shadow-md shadow-[#4A3131]/20"
                   : "text-[#5D6065] hover:bg-[#E4D4CC]/50 hover:text-[#4A3131]"
-              }`}
+                }`}
             >
               {icon}
               {label}
@@ -61,7 +60,7 @@ export function LecturerNavbar({ name, staffId }: Props) {
           <p className="font-mono font-black text-[#4A3131] text-sm leading-tight">{staffId}</p>
         </div>
 
-        <LogoutButton 
+        <LogoutButton
           className="px-5 py-2.5 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition-all shadow-[#4A3131]/20 shadow-md flex items-center gap-2 group"
           iconClassName="w-4 h-4 group-hover:-translate-x-1 transition-transform"
         />

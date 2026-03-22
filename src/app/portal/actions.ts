@@ -64,8 +64,21 @@ export async function authenticateStudentExam(formData: FormData): Promise<{
     return { error: "Invalid Matriculation Number or Exam PIN." };
   }
 
-  // Step 4: Guard — exam must be ACTIVE
-  if (exam.status !== "ACTIVE") {
+  const questionCountRows = await prisma.$queryRaw<Array<{ count: bigint }>>`
+    SELECT COUNT(*)::bigint AS count
+    FROM "Question"
+    WHERE "examId" = ${exam.id}
+  `;
+
+  const questionCount = Number(questionCountRows[0]?.count ?? 0);
+  if (questionCount < 1) {
+    return {
+      error: "This examination has not been configured with questions yet. Contact your lecturer.",
+    };
+  }
+
+  // Step 4: Guard — only UPCOMING/ACTIVE exams can enter the waiting pipeline
+  if (exam.status !== "ACTIVE" && exam.status !== "UPCOMING") {
     return {
       error: `This examination is currently ${exam.status}. You cannot enter the hall right now.`,
     };
@@ -94,6 +107,6 @@ export async function authenticateStudentExam(formData: FormData): Promise<{
     path: "/",
   });
 
-  // Step 7: Redirect to the active exam session
-  redirect("/portal/session");
+  // Step 7: Redirect to waiting room for pre-flight checks and launch gate
+  redirect("/portal/waiting-room");
 }
