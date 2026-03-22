@@ -146,12 +146,12 @@ export default async function ExamMonitorPage({ params }: MonitorPageProps) {
                     </div>
                     <ul className="space-y-2 max-h-64 overflow-y-auto">
                         {waitingStudents.length === 0 ? (
-                            <li className="text-sm text-[#6E6E6E]">No students waiting.</li>
+                            <li className="text-sm text-secondary">No students waiting.</li>
                         ) : (
                             waitingStudents.map((entry) => (
                                 <li
                                     key={entry.student.id}
-                                    className="text-sm font-semibold text-primary bg-[#F8F2ED] border border-accent rounded-lg px-3 py-2"
+                                    className="text-sm font-semibold text-primary bg-accent border border-accent rounded-lg px-3 py-2"
                                 >
                                     {entry.student.firstName} {entry.student.lastName} ({entry.student.matricNumber})
                                 </li>
@@ -167,12 +167,12 @@ export default async function ExamMonitorPage({ params }: MonitorPageProps) {
                     </div>
                     <ul className="space-y-2 max-h-64 overflow-y-auto">
                         {activeHealthy.length === 0 ? (
-                            <li className="text-sm text-[#6E6E6E]">No healthy active sessions yet.</li>
+                            <li className="text-sm text-secondary">No healthy active sessions yet.</li>
                         ) : (
                             activeHealthy.map((entry) => (
                                 <li
                                     key={entry.student.id}
-                                    className="text-sm font-semibold text-[#1F5130] bg-green-50 border border-green-200 rounded-lg px-3 py-2"
+                                    className="text-sm font-semibold text-green-800 bg-green-50 border border-green-200 rounded-lg px-3 py-2"
                                 >
                                     {entry.student.firstName} {entry.student.lastName} · Q{entry.currentQuestion}
                                 </li>
@@ -188,7 +188,7 @@ export default async function ExamMonitorPage({ params }: MonitorPageProps) {
                     </div>
                     <ul className="space-y-2 max-h-64 overflow-y-auto">
                         {disconnected.length === 0 ? (
-                            <li className="text-sm text-[#6E6E6E]">No disconnections currently detected.</li>
+                            <li className="text-sm text-secondary">No disconnections currently detected.</li>
                         ) : (
                             disconnected.map((entry) => (
                                 <li
@@ -210,7 +210,7 @@ export default async function ExamMonitorPage({ params }: MonitorPageProps) {
 
                     <div className="space-y-4 max-h-112 overflow-y-auto pr-1">
                         {logs.length === 0 ? (
-                            <p className="text-sm text-[#6E6E6E]">No malpractice logs captured yet.</p>
+                            <p className="text-sm text-secondary">No malpractice logs captured yet.</p>
                         ) : (
                             logs.map((log) => (
                                 <article
@@ -223,7 +223,7 @@ export default async function ExamMonitorPage({ params }: MonitorPageProps) {
                                     <p className="text-sm font-semibold text-primary mt-1">
                                         {log.student?.firstName || "Unknown"} {log.student?.lastName || "Student"}
                                     </p>
-                                    <p className="text-sm text-[#6A4C41] mt-1">
+                                    <p className="text-sm text-secondary mt-1">
                                         {log.description || log.details || "No details provided."}
                                     </p>
                                     {log.snapshotUrl ? (
@@ -233,7 +233,7 @@ export default async function ExamMonitorPage({ params }: MonitorPageProps) {
                                             className="mt-3 w-full max-h-44 object-cover rounded-lg border border-red-200"
                                         />
                                     ) : null}
-                                    <p className="text-[11px] text-[#7A6156] mt-2">
+                                    <p className="text-[11px] text-secondary/80 mt-2">
                                         {new Date(log.createdAt || log.timestamp || 0).toLocaleString()}
                                     </p>
                                 </article>

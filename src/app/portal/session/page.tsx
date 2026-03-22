@@ -370,14 +370,14 @@ export default function SecureExamSessionPage() {
 
     if (submissionReason === "malpractice") {
         return (
-            <div className="min-h-screen bg-[#F4EFEA] text-[#2E1F1A] flex items-center justify-center p-6">
+            <div className="min-h-screen bg-accent text-primary flex items-center justify-center p-6">
                 <div className="max-w-xl w-full bg-white border-2 border-red-200 rounded-3xl p-10 text-center shadow-xl">
                     <h1 className="text-4xl font-black text-red-700">Flagged for Malpractice</h1>
-                    <p className="mt-4 text-lg text-[#5A3A2E] font-medium">
+                    <p className="mt-4 text-lg text-secondary font-medium">
                         Your exam has been automatically submitted due to repeated security
                         violations.
                     </p>
-                    <p className="mt-5 text-sm text-[#7A5A4D]">
+                    <p className="mt-5 text-sm text-secondary/80">
                         Total infractions: {warnings.length} | Malpractice score: {malpracticeScore}%
                     </p>
                 </div>
@@ -387,10 +387,10 @@ export default function SecureExamSessionPage() {
 
     if (submissionReason) {
         return (
-            <div className="min-h-screen bg-[#F4EFEA] text-[#2E1F1A] flex items-center justify-center p-6">
-                <div className="max-w-xl w-full bg-white border border-[#C9B9AE] rounded-3xl p-10 text-center shadow-xl">
+            <div className="min-h-screen bg-accent text-primary flex items-center justify-center p-6">
+                <div className="max-w-xl w-full bg-white border border-accent rounded-3xl p-10 text-center shadow-xl">
                     <h1 className="text-4xl font-black text-primary">Exam Submitted</h1>
-                    <p className="mt-4 text-lg text-[#5A3A2E] font-medium">
+                    <p className="mt-4 text-lg text-secondary font-medium">
                         {submissionReason === "time-up"
                             ? "Time has elapsed and your script was auto-submitted."
                             : "Your answers have been submitted successfully."}
@@ -405,17 +405,17 @@ export default function SecureExamSessionPage() {
 
     if (!examStarted) {
         return (
-            <div className="min-h-screen bg-[#F4EFEA] text-[#2E1F1A] flex items-center justify-center p-6">
-                <div className="max-w-2xl w-full text-center bg-white border border-[#C9B9AE] rounded-3xl p-10 shadow-xl">
+            <div className="min-h-screen bg-accent text-primary flex items-center justify-center p-6">
+                <div className="max-w-2xl w-full text-center bg-white border border-accent rounded-3xl p-10 shadow-xl">
                     <h1 className="text-4xl md:text-5xl font-black text-primary tracking-tight">
                         Secure Examination Mode
                     </h1>
-                    <p className="mt-5 text-lg text-[#5D453D] font-medium">
+                    <p className="mt-5 text-lg text-secondary font-medium">
                         This exam requires fullscreen mode with active proctoring. Do not
                         switch tabs, exit fullscreen, or attempt copy/paste operations.
                     </p>
                     {sessionContext?.examTitle ? (
-                        <p className="mt-4 text-sm font-bold text-[#6E574D]">
+                        <p className="mt-4 text-sm font-bold text-secondary">
                             Exam: {sessionContext.examTitle}
                         </p>
                     ) : null}
@@ -428,7 +428,7 @@ export default function SecureExamSessionPage() {
                         type="button"
                         onClick={handleStartSecureMode}
                         disabled={isStartingExam || Boolean(sessionError)}
-                        className="mt-10 w-full h-16 rounded-2xl bg-primary text-[#F8F1EA] text-lg font-black hover:bg-[#3B2727] transition disabled:opacity-60"
+                        className="mt-10 w-full h-16 rounded-2xl bg-primary text-white text-lg font-black hover:bg-primary/90 transition disabled:opacity-60"
                     >
                         {isStartingExam
                             ? "Entering Secure Mode..."
@@ -447,10 +447,10 @@ export default function SecureExamSessionPage() {
 
     if (!activeQuestion) {
         return (
-            <div className="min-h-screen bg-[#F4EFEA] text-[#2E1F1A] flex items-center justify-center p-6">
-                <div className="max-w-xl w-full bg-white border border-[#C9B9AE] rounded-3xl p-10 text-center shadow-xl">
+            <div className="min-h-screen bg-accent text-primary flex items-center justify-center p-6">
+                <div className="max-w-xl w-full bg-white border border-accent rounded-3xl p-10 text-center shadow-xl">
                     <h1 className="text-3xl font-black text-primary">No Questions Available</h1>
-                    <p className="mt-4 text-base text-[#5A3A2E] font-medium">
+                    <p className="mt-4 text-base text-secondary font-medium">
                         This exam has no question bank yet. Please contact your lecturer.
                     </p>
                 </div>
@@ -459,11 +459,11 @@ export default function SecureExamSessionPage() {
     }
 
     return (
-        <main className="h-screen overflow-hidden bg-[#F4EFEA] text-[#2E1F1A] p-4 md:p-6">
+        <main className="h-screen overflow-hidden bg-accent text-primary p-4 md:p-6">
             <div className="h-full grid grid-cols-1 lg:grid-cols-10 gap-4 md:gap-6">
-                <section className="lg:col-span-7 h-full bg-white rounded-3xl border border-[#CCBBAE] p-6 md:p-8 flex flex-col">
+                <section className="lg:col-span-7 h-full bg-white rounded-3xl border border-accent p-6 md:p-8 flex flex-col">
                     <div className="mb-6 flex items-center justify-between">
-                        <p className="text-sm font-bold tracking-wide text-[#6E574D]">
+                        <p className="text-sm font-bold tracking-wide text-secondary">
                             Question {currentQuestionIndex + 1} of {questions.length}
                         </p>
                         <button
@@ -472,13 +472,13 @@ export default function SecureExamSessionPage() {
                                 void handleSubmitNow();
                             }}
                             disabled={isSubmittingFinal}
-                            className="px-4 py-2 rounded-xl bg-primary text-[#F8F1EA] text-sm font-bold hover:bg-[#3B2727] disabled:opacity-60"
+                            className="px-4 py-2 rounded-xl bg-primary text-white text-sm font-bold hover:bg-primary/90 disabled:opacity-60"
                         >
                             {isSubmittingFinal ? "Submitting..." : "Submit Exam"}
                         </button>
                     </div>
 
-                    <h2 className="text-2xl md:text-3xl font-black text-[#3E2A23] leading-snug">
+                    <h2 className="text-2xl md:text-3xl font-black text-primary leading-snug">
                         {activeQuestion.text}
                     </h2>
 
@@ -490,8 +490,8 @@ export default function SecureExamSessionPage() {
                                 <label
                                     key={option}
                                     className={`flex items-center gap-4 rounded-2xl border-2 px-4 py-3 cursor-pointer transition ${selected
-                                        ? "border-primary bg-[#EFE3DA]"
-                                        : "border-[#E2D4C8] bg-[#FBF7F3] hover:border-[#BCA89B]"
+                                        ? "border-primary bg-accent/70"
+                                        : "border-accent bg-accent hover:border-accent/80"
                                         }`}
                                 >
                                     <input
@@ -501,7 +501,7 @@ export default function SecureExamSessionPage() {
                                         onChange={() => handleAnswerSelect(activeQuestion.id, index)}
                                         className="w-5 h-5 accent-primary"
                                     />
-                                    <span className="text-base font-semibold text-[#3E2A23]">{option}</span>
+                                    <span className="text-base font-semibold text-primary">{option}</span>
                                 </label>
                             );
                         })}
@@ -523,15 +523,15 @@ export default function SecureExamSessionPage() {
                                 setCurrentQuestionIndex((prev) => Math.min(questions.length - 1, prev + 1))
                             }
                             disabled={currentQuestionIndex === questions.length - 1}
-                            className="h-12 px-6 rounded-xl bg-primary text-[#F8F1EA] font-bold disabled:opacity-40"
+                            className="h-12 px-6 rounded-xl bg-primary text-white font-bold disabled:opacity-40"
                         >
                             Next
                         </button>
                     </div>
                 </section>
 
-                <aside className="lg:col-span-3 h-full bg-white rounded-3xl border border-[#CCBBAE] p-5 flex flex-col gap-4 overflow-hidden">
-                    <div className="rounded-2xl border-2 border-primary overflow-hidden bg-[#EDE1D7] h-44 sm:h-52">
+                <aside className="lg:col-span-3 h-full bg-white rounded-3xl border border-accent p-5 flex flex-col gap-4 overflow-hidden">
+                    <div className="rounded-2xl border-2 border-primary overflow-hidden bg-accent/60 h-44 sm:h-52">
                         <Webcam
                             ref={webcamRef}
                             audio={false}
@@ -543,32 +543,32 @@ export default function SecureExamSessionPage() {
                         />
                     </div>
 
-                    <div className="rounded-2xl bg-[#F8EFE7] border border-[#D9C9BC] p-4 text-center">
-                        <p className="text-xs uppercase tracking-[0.2em] font-bold text-[#6C5248]">Time Left</p>
+                    <div className="rounded-2xl bg-accent border border-accent p-4 text-center">
+                        <p className="text-xs uppercase tracking-[0.2em] font-bold text-secondary">Time Left</p>
                         <p className="text-5xl font-black text-primary mt-1">{formattedTime}</p>
-                        <p className="mt-2 text-xs font-semibold text-[#6C5248]">{cloudStatusLabel}</p>
+                        <p className="mt-2 text-xs font-semibold text-secondary">{cloudStatusLabel}</p>
                         {lastCloudSyncAt ? (
-                            <p className="mt-1 text-[11px] text-[#7F675A]">
+                            <p className="mt-1 text-[11px] text-secondary/80">
                                 Last cloud sync: {lastCloudSyncAt.toLocaleTimeString()}
                             </p>
                         ) : null}
                     </div>
 
-                    <div className="rounded-2xl border border-[#D9C9BC] p-4 bg-[#FBF7F3]">
+                    <div className="rounded-2xl border border-accent p-4 bg-accent">
                         <div className="flex items-center justify-between mb-2">
                             <p className="text-sm font-bold text-primary">Security Status</p>
                             <p className="text-sm font-black text-primary">{malpracticeScore}%</p>
                         </div>
-                        <div className="h-3 rounded-full bg-[#E8DCD4] overflow-hidden">
+                        <div className="h-3 rounded-full bg-accent/80 overflow-hidden">
                             <div
                                 className={`h-full rounded-full transition-all duration-300 ${securityColor}`}
                                 style={{ width: `${malpracticeScore}%` }}
                             />
                         </div>
-                        <p className="mt-2 text-xs text-[#6C5248]">Green: 0-30, Yellow: 31-70, Red: 71-99</p>
+                        <p className="mt-2 text-xs text-secondary">Green: 0-30, Yellow: 31-70, Red: 71-99</p>
                         <div className="mt-3 space-y-2 max-h-24 overflow-y-auto">
                             {activeAnomalies.length === 0 ? (
-                                <p className="text-xs text-[#7F675A]">No active anomalies detected.</p>
+                                <p className="text-xs text-secondary/80">No active anomalies detected.</p>
                             ) : (
                                 activeAnomalies.map((anomaly) => (
                                     <p
@@ -582,7 +582,7 @@ export default function SecureExamSessionPage() {
                         </div>
                     </div>
 
-                    <div className="rounded-2xl border border-[#D9C9BC] p-4 bg-[#FBF7F3] min-h-0 flex flex-col">
+                    <div className="rounded-2xl border border-accent p-4 bg-accent min-h-0 flex flex-col">
                         <p className="text-sm font-bold text-primary mb-3">Question Navigator</p>
                         <div className="grid grid-cols-5 gap-2 overflow-y-auto pr-1">
                             {Array.from({ length: questions.length }, (_, i) => {
@@ -599,9 +599,9 @@ export default function SecureExamSessionPage() {
                                         type="button"
                                         onClick={() => setCurrentQuestionIndex(i)}
                                         className={`h-9 rounded-lg text-sm font-bold transition ${answered
-                                            ? "bg-primary text-[#F8F1EA]"
-                                            : "bg-[#D9D4CF] text-primary"
-                                            } ${isActive ? "ring-2 ring-[#2E1F1A]" : ""}`}
+                                            ? "bg-primary text-white"
+                                            : "bg-accent text-primary"
+                                            } ${isActive ? "ring-2 ring-primary" : ""}`}
                                     >
                                         {questionId}
                                     </button>

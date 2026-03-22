@@ -85,28 +85,28 @@ export default async function LecturerExamResultsPage({ params }: PageProps) {
     return (
         <div className="max-w-7xl mx-auto space-y-7 pb-16">
             <section className="bg-white rounded-3xl border border-accent p-7 shadow-sm">
-                <p className="text-xs font-bold tracking-[0.16em] uppercase text-[#7A6156]">Exam Result Workflow</p>
+                <p className="text-xs font-bold tracking-[0.16em] uppercase text-secondary/80">Exam Result Workflow</p>
                 <h1 className="mt-2 text-3xl font-black text-primary">{exam.title}</h1>
-                <p className="text-sm font-semibold text-[#6A4D43] mt-1">{exam.course.code}</p>
+                <p className="text-sm font-semibold text-secondary mt-1">{exam.course.code}</p>
                 <Link
                     href="/lecturer/exams"
-                    className="inline-flex mt-4 px-4 py-2 rounded-lg border border-accent text-sm font-bold text-primary hover:bg-[#F4EFEA]"
+                    className="inline-flex mt-4 px-4 py-2 rounded-lg border border-accent text-sm font-bold text-primary hover:bg-accent"
                 >
                     Back to Exams
                 </Link>
             </section>
 
             <section className="bg-white rounded-3xl border border-accent shadow-sm overflow-hidden">
-                <div className="p-5 border-b border-accent bg-[#F4EFEA]/30">
+                <div className="p-5 border-b border-accent bg-accent/30">
                     <h2 className="text-lg font-black text-primary">Auto-Graded Results</h2>
                 </div>
 
                 {exam.results.length === 0 ? (
-                    <p className="p-6 text-sm font-semibold text-[#6A4D43]">No result records yet for this exam.</p>
+                    <p className="p-6 text-sm font-semibold text-secondary">No result records yet for this exam.</p>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left text-secondary">
-                            <thead className="bg-[#F4EFEA] text-xs uppercase font-bold text-primary">
+                            <thead className="bg-accent text-xs uppercase font-bold text-primary">
                                 <tr>
                                     <th className="px-5 py-4">Student</th>
                                     <th className="px-5 py-4">Score</th>
@@ -132,7 +132,7 @@ export default async function LecturerExamResultsPage({ params }: PageProps) {
                                                 {result.score}/{result.totalMarks}
                                             </td>
                                             <td className="px-5 py-4">
-                                                <span className="px-2 py-1 rounded-md bg-[#F4EFEA] border border-accent text-xs font-bold">
+                                                <span className="px-2 py-1 rounded-md bg-accent border border-accent text-xs font-bold">
                                                     {result.status}
                                                 </span>
                                             </td>
@@ -141,13 +141,13 @@ export default async function LecturerExamResultsPage({ params }: PageProps) {
                                                     <form action={action}>
                                                         <button
                                                             type="submit"
-                                                            className="px-3 py-2 rounded-lg bg-primary text-white text-xs font-bold hover:bg-[#5D3D3D]"
+                                                            className="px-3 py-2 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary/90"
                                                         >
                                                             Approve & Send to Admin
                                                         </button>
                                                     </form>
                                                 ) : (
-                                                    <span className="text-xs font-bold text-[#6A4D43]">Reviewed</span>
+                                                    <span className="text-xs font-bold text-secondary">Reviewed</span>
                                                 )}
                                             </td>
                                         </tr>

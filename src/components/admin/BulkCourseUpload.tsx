@@ -90,11 +90,11 @@ export function BulkCourseUpload({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#5D6065]/20 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-[#E4D4CC] animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex justify-between items-center px-6 py-5 border-b border-[#E4D4CC]/60 bg-[#F4EFEA]/30">
-          <h3 className="font-bold text-xl text-[#4A3131]">Bulk Upload Courses</h3>
-          <button onClick={onClose} disabled={isUploading} className="text-[#5D6065] hover:text-[#4A3131] transition bg-white rounded-full p-1.5 shadow-sm border border-[#E4D4CC]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-secondary/20 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-accent animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex justify-between items-center px-6 py-5 border-b border-accent/60 bg-accent/30">
+          <h3 className="font-bold text-xl text-primary">Bulk Upload Courses</h3>
+          <button onClick={onClose} disabled={isUploading} className="text-secondary hover:text-primary transition bg-white rounded-full p-1.5 shadow-sm border border-accent">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -108,10 +108,10 @@ export function BulkCourseUpload({
             </div>
           ) : (
             <>
-              <div className="bg-[#F4EFEA] p-4 rounded-xl border border-[#E4D4CC] mb-6 flex justify-between items-center">
+              <div className="bg-accent p-4 rounded-xl border border-accent mb-6 flex justify-between items-center">
                 <div>
-                   <p className="text-xs font-bold text-[#5D6065] uppercase">Target</p>
-                   <p className="font-bold text-[#4A3131]">{level} Level</p>
+                   <p className="text-xs font-bold text-secondary uppercase">Target</p>
+                   <p className="font-bold text-primary">{level} Level</p>
                 </div>
               </div>
 
@@ -120,7 +120,7 @@ export function BulkCourseUpload({
                 onDragLeave={() => setIsDragging(false)}
                 onDrop={onDrop}
                 onClick={() => !isUploading && fileInputRef.current?.click()}
-                className={`border-2 border-dashed rounded-xl p-10 flex flex-col items-center justify-center text-center cursor-pointer transition ${isDragging ? "border-[#4A3131] bg-[#F4EFEA]/50" : "border-[#E4D4CC] hover:border-[#4A3131] hover:bg-[#F4EFEA]/30"}`}
+                className={`border-2 border-dashed rounded-xl p-10 flex flex-col items-center justify-center text-center cursor-pointer transition ${isDragging ? "border-primary bg-accent/50" : "border-accent hover:border-primary hover:bg-accent/30"}`}
               >
                 <input 
                   type="file" 
@@ -137,15 +137,15 @@ export function BulkCourseUpload({
                 
                 {isUploading ? (
                   <div className="animate-pulse flex flex-col items-center">
-                    <UploadCloud className="w-12 h-12 text-[#4A3131] mb-4 opacity-50" />
-                    <p className="font-bold text-[#4A3131]">Processing CSV...</p>
+                    <UploadCloud className="w-12 h-12 text-primary mb-4 opacity-50" />
+                    <p className="font-bold text-primary">Processing CSV...</p>
                   </div>
                 ) : (
                   <>
-                    <UploadCloud className="w-12 h-12 text-[#4A3131] mb-4" />
-                    <p className="font-bold text-[#4A3131] text-lg">Click or Drag CSV to upload</p>
-                    <p className="text-sm text-[#5D6065] mt-2">Required headers: courseCode, courseTitle</p>
-                    <p className="text-sm text-[#5D6065]">Optional: staffId</p>
+                    <UploadCloud className="w-12 h-12 text-primary mb-4" />
+                    <p className="font-bold text-primary text-lg">Click or Drag CSV to upload</p>
+                    <p className="text-sm text-secondary mt-2">Required headers: courseCode, courseTitle</p>
+                    <p className="text-sm text-secondary">Optional: staffId</p>
                   </>
                 )}
               </div>

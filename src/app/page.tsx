@@ -53,12 +53,12 @@ export default function HomePage() {
   }, { scope: container });
 
   return (
-    <div ref={container} className="min-h-screen bg-[#F4EFEA] font-sans overflow-hidden">
+    <div ref={container} className="min-h-screen bg-accent font-sans overflow-hidden">
       <nav className="absolute top-0 w-full p-6 md:p-8 flex justify-between items-center z-50">
         <div className="text-2xl font-black text-primary tracking-tighter">OpenCBT</div>
         <div className="flex gap-3 md:gap-4 items-center">
           <Link href="/sign-in" className="px-3 md:px-5 py-2.5 font-bold text-secondary hover:text-primary transition">Log In</Link>
-          <Link href="/sign-up" className="px-4 md:px-5 py-2.5 font-bold bg-primary text-white rounded-xl shadow-md hover:bg-[#5a3f3f] transition">Get Started</Link>
+          <Link href="/sign-up" className="px-4 md:px-5 py-2.5 font-bold bg-primary text-white rounded-xl shadow-md hover:bg-primary/85 transition">Get Started</Link>
         </div>
       </nav>
 
@@ -79,7 +79,7 @@ export default function HomePage() {
           </p>
 
           <div className="hero-anim flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <Link href="/sign-up" className="px-8 py-4 bg-primary text-white text-lg font-bold rounded-xl shadow-xl shadow-primary/20 hover:-translate-y-1 hover:shadow-2xl hover:bg-[#5a3f3f] transition-all duration-300">
+            <Link href="/sign-up" className="px-8 py-4 bg-primary text-white text-lg font-bold rounded-xl shadow-xl shadow-primary/20 hover:-translate-y-1 hover:shadow-2xl hover:bg-primary/85 transition-all duration-300">
               Start Free Trial
             </Link>
             <Link href="/sign-in" className="px-8 py-4 bg-transparent border-2 border-accent text-primary text-lg font-bold rounded-xl hover:bg-accent/30 hover:border-primary/30 transition-all duration-300">
@@ -89,15 +89,15 @@ export default function HomePage() {
 
           <div className="hero-anim mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-3xl">
             <div className="bg-white/70 border border-accent rounded-xl px-4 py-3 text-left">
-              <p className="text-xs font-bold text-[#6F5A51] uppercase tracking-wider">Security</p>
+              <p className="text-xs font-bold text-secondary uppercase tracking-wider">Security</p>
               <p className="font-black text-primary">Zero-Trust Runtime</p>
             </div>
             <div className="bg-white/70 border border-accent rounded-xl px-4 py-3 text-left">
-              <p className="text-xs font-bold text-[#6F5A51] uppercase tracking-wider">Proctoring</p>
+              <p className="text-xs font-bold text-secondary uppercase tracking-wider">Proctoring</p>
               <p className="font-black text-primary">ML Face + Lighting Checks</p>
             </div>
             <div className="bg-white/70 border border-accent rounded-xl px-4 py-3 text-left">
-              <p className="text-xs font-bold text-[#6F5A51] uppercase tracking-wider">Results</p>
+              <p className="text-xs font-bold text-secondary uppercase tracking-wider">Results</p>
               <p className="font-black text-primary">Tiered Publication Workflow</p>
             </div>
           </div>
@@ -107,19 +107,19 @@ export default function HomePage() {
       <section className="section-anim relative z-10 max-w-7xl mx-auto px-6 pb-14">
         <div className="bg-white border border-accent rounded-3xl p-6 md:p-8 grid grid-cols-1 md:grid-cols-4 gap-6">
           <div>
-            <p className="text-xs font-bold text-[#7A6156] uppercase tracking-widest">Institutions</p>
+            <p className="text-xs font-bold text-secondary/80 uppercase tracking-widest">Institutions</p>
             <p className="text-3xl font-black text-primary mt-2">35+</p>
           </div>
           <div>
-            <p className="text-xs font-bold text-[#7A6156] uppercase tracking-widest">Students Proctored</p>
+            <p className="text-xs font-bold text-secondary/80 uppercase tracking-widest">Students Proctored</p>
             <p className="text-3xl font-black text-primary mt-2">120K+</p>
           </div>
           <div>
-            <p className="text-xs font-bold text-[#7A6156] uppercase tracking-widest">Auto-Grade Speed</p>
+            <p className="text-xs font-bold text-secondary/80 uppercase tracking-widest">Auto-Grade Speed</p>
             <p className="text-3xl font-black text-primary mt-2">&lt; 2s</p>
           </div>
           <div>
-            <p className="text-xs font-bold text-[#7A6156] uppercase tracking-widest">Exam Uptime</p>
+            <p className="text-xs font-bold text-secondary/80 uppercase tracking-widest">Exam Uptime</p>
             <p className="text-3xl font-black text-primary mt-2">99.9%</p>
           </div>
         </div>
@@ -128,7 +128,7 @@ export default function HomePage() {
       <section className="section-anim relative z-10 max-w-7xl mx-auto px-6 pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           <div className="bg-white border border-accent rounded-3xl p-8">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#7A6156]">How It Works</p>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-secondary/80">How It Works</p>
             <h2 className="mt-3 text-3xl font-black text-primary">From setup to verified publication</h2>
             <div className="mt-6 space-y-5">
               <div className="flex gap-4">
@@ -156,7 +156,7 @@ export default function HomePage() {
           </div>
 
           <div className="bg-accent/35 border border-accent rounded-3xl p-8">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#7A6156]">Platform Modules</p>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-secondary/80">Platform Modules</p>
             <h3 className="mt-3 text-2xl font-black text-primary">Everything you need in one control plane</h3>
             <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-white rounded-2xl border border-accent p-4">
@@ -221,7 +221,7 @@ export default function HomePage() {
       <section className="section-anim relative z-10 max-w-7xl mx-auto px-6 pb-24">
         <div className="bg-white border border-accent rounded-3xl p-8 md:p-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#7A6156]">Why Institutions Choose OpenCBT</p>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-secondary/80">Why Institutions Choose OpenCBT</p>
             <h3 className="mt-3 text-3xl font-black text-primary">Built for high-stakes assessment operations</h3>
             <div className="mt-6 space-y-3">
               <p className="flex items-center gap-3 text-primary font-bold"><CheckCircle2 className="w-5 h-5" /> Zero-trust student session lifecycle</p>
@@ -231,8 +231,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="bg-[#F4EFEA] border border-accent rounded-2xl p-6">
-            <p className="text-sm font-bold text-[#6F5A51] uppercase tracking-widest">Operator Testimonial</p>
+          <div className="bg-accent border border-accent rounded-2xl p-6">
+            <p className="text-sm font-bold text-secondary uppercase tracking-widest">Operator Testimonial</p>
             <p className="mt-4 text-xl leading-relaxed font-bold text-primary">
               "We moved from fragmented invigilation to one verified workflow. OpenCBT reduced malpractice disputes and shortened publication cycles from days to minutes."
             </p>
@@ -245,15 +245,15 @@ export default function HomePage() {
         <div className="bg-primary text-white rounded-3xl p-8 md:p-12 text-center">
           <p className="text-xs uppercase tracking-[0.2em] font-bold text-accent">Ready To Deploy</p>
           <h3 className="mt-3 text-4xl md:text-5xl font-black">Launch secure institution-wide exams</h3>
-          <p className="mt-4 max-w-2xl mx-auto text-[#F1E6DE] font-medium">
+          <p className="mt-4 max-w-2xl mx-auto text-white/90 font-medium">
             Start with one faculty, scale across departments, and keep every exam session traceable from access pin to final publication.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link href="/sign-up" className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-primary font-black hover:bg-[#F4EFEA] transition">
+            <Link href="/sign-up" className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white text-primary font-black hover:bg-accent transition">
               Create Institution Workspace
               <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link href="/sign-in" className="px-8 py-4 rounded-xl border border-accent text-white font-bold hover:bg-[#5B4040] transition">
+            <Link href="/sign-in" className="px-8 py-4 rounded-xl border border-accent text-white font-bold hover:bg-primary/85 transition">
               Sign In
             </Link>
           </div>

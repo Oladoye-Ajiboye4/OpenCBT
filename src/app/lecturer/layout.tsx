@@ -24,7 +24,7 @@ export default async function LecturerLayout({
   const staffId = lecturer.staffId || "N/A";
 
   return (
-    <div className="min-h-screen bg-[#F4EFEA] text-[#5D6065] flex flex-col font-sans">
+    <div className="min-h-screen bg-accent text-secondary flex flex-col font-sans">
       <LecturerNavbar name={displayName} staffId={staffId} />
 
       {/* Main Content */}

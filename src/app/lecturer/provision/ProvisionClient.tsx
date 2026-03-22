@@ -118,30 +118,30 @@ export function ProvisionClient({ exams }: { exams: Exam[] }) {
     <div ref={container} className="p-8 max-w-3xl mx-auto font-sans pb-24">
       {/* Page Header */}
       <div className="anim-item mb-10">
-        <div className="inline-flex items-center gap-2 bg-[#4A3131]/10 text-[#4A3131] text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-4">
+        <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-4">
           <Zap className="w-3.5 h-3.5" />
           Smart Sync
         </div>
-        <h1 className="text-4xl font-black text-[#4A3131] tracking-tight leading-tight">
+        <h1 className="text-4xl font-black text-primary tracking-tight leading-tight">
           Roster Provisioning
         </h1>
-        <p className="text-[#5D6065] text-lg mt-2 font-medium">
+        <p className="text-secondary text-lg mt-2 font-medium">
           Automatically enroll students from the Global Registry and dispatch
           secure exam credentials.
         </p>
       </div>
 
       {/* Step 1: Exam Dropdown */}
-      <div className="anim-item bg-white rounded-3xl border border-[#E4D4CC] shadow-sm p-8 mb-6">
+      <div className="anim-item bg-white rounded-3xl border border-accent shadow-sm p-8 mb-6">
         <div className="flex items-center gap-3 mb-5">
-          <div className="w-9 h-9 rounded-xl bg-[#4A3131] flex items-center justify-center shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shrink-0">
             <CalendarCheck className="w-4.5 h-4.5 text-white w-4 h-4" />
           </div>
           <div>
-            <p className="text-xs font-bold text-[#5D6065] uppercase tracking-widest">
+            <p className="text-xs font-bold text-secondary uppercase tracking-widest">
               Step 1
             </p>
-            <h2 className="text-lg font-black text-[#4A3131] leading-tight">
+            <h2 className="text-lg font-black text-primary leading-tight">
               Select Upcoming Exam
             </h2>
           </div>
@@ -161,7 +161,7 @@ export function ProvisionClient({ exams }: { exams: Exam[] }) {
               value={selectedExamId}
               onChange={(e) => setSelectedExamId(e.target.value)}
               disabled={isSubmitting}
-              className="w-full appearance-none p-4 pr-12 border-2 border-[#E4D4CC] rounded-2xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-semibold bg-[#FDFAF8] hover:border-[#4A3131]/40 cursor-pointer disabled:opacity-60"
+              className="w-full appearance-none p-4 pr-12 border-2 border-accent rounded-2xl focus:border-primary focus:outline-none transition text-primary font-semibold bg-accent hover:border-primary/40 cursor-pointer disabled:opacity-60"
             >
               <option value="">— Choose an upcoming exam —</option>
               {exams.map((exam) => (
@@ -171,7 +171,7 @@ export function ProvisionClient({ exams }: { exams: Exam[] }) {
                 </option>
               ))}
             </select>
-            <ChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#5D6065]" />
+            <ChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-secondary" />
           </div>
         )}
       </div>
@@ -179,8 +179,8 @@ export function ProvisionClient({ exams }: { exams: Exam[] }) {
       {/* Step 2: Dynamic Info Card */}
       {selectedExam && (
         <div className="info-card anim-item mb-6">
-          <div className="bg-gradient-to-br from-[#4A3131] to-[#6b4848] rounded-3xl p-px shadow-lg">
-            <div className="bg-gradient-to-br from-[#4A3131] to-[#5e3d3d] rounded-3xl p-7">
+          <div className="bg-gradient-to-br from-primary to-primary/85 rounded-3xl p-px shadow-lg">
+            <div className="bg-gradient-to-br from-primary to-primary/85 rounded-3xl p-7">
               <p className="text-xs font-bold text-white/50 uppercase tracking-widest mb-4">
                 Target Demographic
               </p>
@@ -233,10 +233,10 @@ export function ProvisionClient({ exams }: { exams: Exam[] }) {
             flex items-center justify-center gap-3
             ${
               isSubmitting
-                ? "bg-[#4A3131]/70 cursor-wait"
+                ? "bg-primary/70 cursor-wait"
                 : selectedExamId
-                ? "bg-[#4A3131] hover:bg-[#3a2626] active:scale-[0.99] hover:shadow-xl cursor-pointer"
-                : "bg-[#4A3131]/40 cursor-not-allowed"
+                ? "bg-primary hover:bg-primary/90 active:scale-[0.99] hover:shadow-xl cursor-pointer"
+                : "bg-primary/40 cursor-not-allowed"
             }
           `}
         >
@@ -271,7 +271,7 @@ export function ProvisionClient({ exams }: { exams: Exam[] }) {
             </>
           )}
         </button>
-        <p className="text-center text-xs text-[#5D6065] font-medium mt-3">
+        <p className="text-center text-xs text-secondary font-medium mt-3">
           This will match all students in the Global Registry by department &
           level, generate unique exam PINs, and email every student
           automatically.
@@ -280,10 +280,10 @@ export function ProvisionClient({ exams }: { exams: Exam[] }) {
 
       {/* Visual success callout guide */}
       {!selectedExamId && exams.length > 0 && (
-        <div className="anim-item mt-8 border border-dashed border-[#E4D4CC] rounded-2xl p-6 flex items-start gap-4 text-[#5D6065]">
-          <CheckCircle2 className="w-5 h-5 text-[#4A3131]/40 mt-0.5 shrink-0" />
+        <div className="anim-item mt-8 border border-dashed border-accent rounded-2xl p-6 flex items-start gap-4 text-secondary">
+          <CheckCircle2 className="w-5 h-5 text-primary/40 mt-0.5 shrink-0" />
           <div>
-            <p className="font-bold text-[#4A3131] text-sm mb-1">
+            <p className="font-bold text-primary text-sm mb-1">
               How Smart Sync works
             </p>
             <ol className="text-sm space-y-1 list-decimal list-inside">
@@ -292,7 +292,7 @@ export function ProvisionClient({ exams }: { exams: Exam[] }) {
                 Review the Target Demographic card to confirm the right cohort.
               </li>
               <li>
-                Hit <span className="font-bold text-[#4A3131]">Sync Roster</span> — every matching student gets a unique 6-character PIN emailed to them instantly.
+                Hit <span className="font-bold text-primary">Sync Roster</span> — every matching student gets a unique 6-character PIN emailed to them instantly.
               </li>
             </ol>
           </div>

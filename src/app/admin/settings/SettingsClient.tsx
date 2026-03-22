@@ -126,76 +126,76 @@ export function SettingsClient({ initialFaculties, initialDepartments, initialPr
   return (
     <div ref={container} className="max-w-7xl mx-auto space-y-8 font-sans">
       <div className="anim-item">
-        <h1 className="text-4xl font-black text-[#4A3131] tracking-tight">Institution Configuration</h1>
-        <p className="text-[#5D6065] text-lg mt-2 font-medium">Manage hierarchical academic structures and global settings.</p>
+        <h1 className="text-4xl font-black text-primary tracking-tight">Institution Configuration</h1>
+        <p className="text-secondary text-lg mt-2 font-medium">Manage hierarchical academic structures and global settings.</p>
       </div>
 
       {/* Institution Profile */}
-      <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] anim-item h-max">
+      <div className="bg-white p-8 rounded-3xl shadow-sm border border-accent anim-item h-max">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-[#F4EFEA] rounded-lg flex items-center justify-center border border-[#E4D4CC]">
-            <ShieldCheck className="w-5 h-5 text-[#4A3131]" />
+          <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center border border-accent">
+            <ShieldCheck className="w-5 h-5 text-primary" />
           </div>
-          <h2 className="text-xl font-bold text-[#4A3131]">Institution Profile</h2>
+          <h2 className="text-xl font-bold text-primary">Institution Profile</h2>
         </div>
         <form onSubmit={handleUpdateProfile}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">Institution Name</label>
-              <input name="name" defaultValue={initialProfile?.name || ""} required placeholder="e.g. OpenCBT University" className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none transition text-[#4A3131] font-medium" />
+              <label className="block text-sm font-bold text-secondary mb-2">Institution Name</label>
+              <input name="name" defaultValue={initialProfile?.name || ""} required placeholder="e.g. OpenCBT University" className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary outline-none transition text-primary font-medium" />
             </div>
             <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">ICT Official Email</label>
-              <input type="email" name="ictEmail" defaultValue={initialProfile?.ictEmail || ""} required placeholder="e.g. ict@opencbt.edu" className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none transition text-[#4A3131] font-medium" />
+              <label className="block text-sm font-bold text-secondary mb-2">ICT Official Email</label>
+              <input type="email" name="ictEmail" defaultValue={initialProfile?.ictEmail || ""} required placeholder="e.g. ict@opencbt.edu" className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary outline-none transition text-primary font-medium" />
             </div>
             <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">Matriculation Mode</label>
-              <select name="matricMode" defaultValue={initialProfile?.matricMode || "MANUAL"} className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none transition text-[#4A3131] font-medium bg-white">
+              <label className="block text-sm font-bold text-secondary mb-2">Matriculation Mode</label>
+              <select name="matricMode" defaultValue={initialProfile?.matricMode || "MANUAL"} className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary outline-none transition text-primary font-medium bg-white">
                 <option value="MANUAL">Manual Entry</option>
                 <option value="AUTO">Auto-Generate (YYYY + Serial)</option>
               </select>
             </div>
           </div>
-          <button type="submit" disabled={isSubmittingProfile} className="px-8 py-3 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition active:scale-[0.98] disabled:opacity-70 flex items-center gap-2">
+          <button type="submit" disabled={isSubmittingProfile} className="px-8 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/85 transition active:scale-[0.98] disabled:opacity-70 flex items-center gap-2">
             {isSubmittingProfile ? <><Loader2 className="w-5 h-5 animate-spin"/> Saving...</> : "Save Profile"}
           </button>
         </form>
       </div>
 
       {/* Academic Calendar */}
-      <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] anim-item h-max">
+      <div className="bg-white p-8 rounded-3xl shadow-sm border border-accent anim-item h-max">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-[#F4EFEA] rounded-lg flex items-center justify-center border border-[#E4D4CC]">
-            <BookOpen className="w-5 h-5 text-[#4A3131]" />
+          <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center border border-accent">
+            <BookOpen className="w-5 h-5 text-primary" />
           </div>
-          <h2 className="text-xl font-bold text-[#4A3131]">Academic Calendar</h2>
+          <h2 className="text-xl font-bold text-primary">Academic Calendar</h2>
         </div>
         <form onSubmit={handleUpdateProfile}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">Current Academic Year</label>
-              <input name="currentAcademicYear" defaultValue={initialProfile?.currentAcademicYear || ""} placeholder="e.g. 2025/2026" className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none transition text-[#4A3131] font-medium" />
+              <label className="block text-sm font-bold text-secondary mb-2">Current Academic Year</label>
+              <input name="currentAcademicYear" defaultValue={initialProfile?.currentAcademicYear || ""} placeholder="e.g. 2025/2026" className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary outline-none transition text-primary font-medium" />
             </div>
             <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">Current Term/Semester</label>
-              <input name="currentTerm" defaultValue={initialProfile?.currentTerm || ""} placeholder="e.g. First Semester" className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none transition text-[#4A3131] font-medium" />
+              <label className="block text-sm font-bold text-secondary mb-2">Current Term/Semester</label>
+              <input name="currentTerm" defaultValue={initialProfile?.currentTerm || ""} placeholder="e.g. First Semester" className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary outline-none transition text-primary font-medium" />
             </div>
           </div>
-          <button type="submit" disabled={isSubmittingProfile} className="px-8 py-3 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition active:scale-[0.98] disabled:opacity-70 flex items-center gap-2">
+          <button type="submit" disabled={isSubmittingProfile} className="px-8 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/85 transition active:scale-[0.98] disabled:opacity-70 flex items-center gap-2">
             {isSubmittingProfile ? <><Loader2 className="w-5 h-5 animate-spin"/> Saving...</> : "Update Calendar"}
           </button>
         </form>
       </div>
 
       {/* Security Actions */}
-      <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] anim-item h-max">
+      <div className="bg-white p-8 rounded-3xl shadow-sm border border-accent anim-item h-max">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-[#F4EFEA] rounded-lg flex items-center justify-center border border-[#E4D4CC]">
-            <KeyRound className="w-5 h-5 text-[#4A3131]" />
+          <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center border border-accent">
+            <KeyRound className="w-5 h-5 text-primary" />
           </div>
-          <h2 className="text-xl font-bold text-[#4A3131]">Security</h2>
+          <h2 className="text-xl font-bold text-primary">Security</h2>
         </div>
-        <p className="text-[#5D6065] font-medium mb-4">Request a secure password reset link for the active administrator account.</p>
+        <p className="text-secondary font-medium mb-4">Request a secure password reset link for the active administrator account.</p>
         <button onClick={handleAdminPasswordReset} disabled={isResettingAuth} className="px-8 py-3 bg-red-600/10 text-red-600 font-bold rounded-xl hover:bg-red-600/20 shadow-none hover:shadow-sm transition active:scale-[0.98] border border-red-600/20 disabled:opacity-70 flex items-center gap-2">
           {isResettingAuth ? <><Loader2 className="w-5 h-5 animate-spin"/> Processing...</> : "Send Password Reset Link"}
         </button>
@@ -204,29 +204,29 @@ export function SettingsClient({ initialFaculties, initialDepartments, initialPr
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         
         {/* Manage Faculties */}
-        <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] anim-item flex flex-col h-[600px]">
+        <div className="bg-white p-8 rounded-3xl shadow-sm border border-accent anim-item flex flex-col h-[600px]">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-[#F4EFEA] rounded-lg flex items-center justify-center border border-[#E4D4CC]">
-              <Building2 className="w-5 h-5 text-[#4A3131]" />
+            <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center border border-accent">
+              <Building2 className="w-5 h-5 text-primary" />
             </div>
-            <h2 className="text-xl font-bold text-[#4A3131]">Manage Faculties</h2>
+            <h2 className="text-xl font-bold text-primary">Manage Faculties</h2>
           </div>
           
           <form onSubmit={handleCreateFaculty} className="flex gap-3 mb-8">
-            <input name="name" required placeholder="e.g. Science and Technology" className="flex-1 p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium" />
-            <button type="submit" disabled={isSubmittingFac} className="px-6 py-3 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition active:scale-[0.98] disabled:opacity-70 flex items-center gap-2">
+            <input name="name" required placeholder="e.g. Science and Technology" className="flex-1 p-3 border-2 border-accent rounded-xl focus:border-primary focus:outline-none transition text-primary font-medium" />
+            <button type="submit" disabled={isSubmittingFac} className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/85 transition active:scale-[0.98] disabled:opacity-70 flex items-center gap-2">
               {isSubmittingFac ? <><Loader2 className="w-5 h-5 animate-spin"/> Adding...</> : "Add Faculty"}
             </button>
           </form>
 
-          <div className="flex-1 overflow-y-auto border border-[#E4D4CC] rounded-2xl bg-[#F4EFEA]/30 p-2">
+          <div className="flex-1 overflow-y-auto border border-accent rounded-2xl bg-accent/30 p-2">
             {initialFaculties.length === 0 ? (
-              <p className="text-[#5D6065] text-center p-4">No faculties found.</p>
+              <p className="text-secondary text-center p-4">No faculties found.</p>
             ) : (
               <ul className="space-y-2">
                 {initialFaculties.map(fac => (
-                  <li key={fac.id} className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-[#E4D4CC]">
-                    <span className="font-bold text-[#4A3131]">{fac.name}</span>
+                  <li key={fac.id} className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-accent">
+                    <span className="font-bold text-primary">{fac.name}</span>
                     <button onClick={() => handleDeleteFaculty(fac.id)} className="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition">
                       <Trash2 className="w-5 h-5" />
                     </button>
@@ -238,18 +238,18 @@ export function SettingsClient({ initialFaculties, initialDepartments, initialPr
         </div>
 
         {/* Manage Departments */}
-        <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] anim-item flex flex-col h-[600px]">
+        <div className="bg-white p-8 rounded-3xl shadow-sm border border-accent anim-item flex flex-col h-[600px]">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-[#F4EFEA] rounded-lg flex items-center justify-center border border-[#E4D4CC]">
-              <Layers className="w-5 h-5 text-[#4A3131]" />
+            <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center border border-accent">
+              <Layers className="w-5 h-5 text-primary" />
             </div>
-            <h2 className="text-xl font-bold text-[#4A3131]">Manage Departments</h2>
+            <h2 className="text-xl font-bold text-primary">Manage Departments</h2>
           </div>
           
           <form onSubmit={handleCreateDepartment} className="space-y-4 mb-8">
             <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">Select Faculty</label>
-              <select name="facultyId" required className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium bg-white">
+              <label className="block text-sm font-bold text-secondary mb-2">Select Faculty</label>
+              <select name="facultyId" required className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary focus:outline-none transition text-primary font-medium bg-white">
                 <option value="">-- Choose Faculty --</option>
                 {initialFaculties.map(fac => (
                   <option key={fac.id} value={fac.id}>{fac.name}</option>
@@ -257,23 +257,23 @@ export function SettingsClient({ initialFaculties, initialDepartments, initialPr
               </select>
             </div>
             <div className="flex gap-3">
-              <input name="name" required placeholder="e.g. Computer Science" className="flex-1 p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium" />
-              <button type="submit" disabled={isSubmittingDept} className="px-6 py-3 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition active:scale-[0.98] disabled:opacity-70 flex items-center gap-2">
+              <input name="name" required placeholder="e.g. Computer Science" className="flex-1 p-3 border-2 border-accent rounded-xl focus:border-primary focus:outline-none transition text-primary font-medium" />
+              <button type="submit" disabled={isSubmittingDept} className="px-6 py-3 bg-primary text-white font-bold rounded-xl hover:bg-primary/85 transition active:scale-[0.98] disabled:opacity-70 flex items-center gap-2">
                 {isSubmittingDept ? <><Loader2 className="w-5 h-5 animate-spin"/> Adding...</> : "Add Dept"}
               </button>
             </div>
           </form>
 
-          <div className="flex-1 overflow-y-auto border border-[#E4D4CC] rounded-2xl bg-[#F4EFEA]/30 p-2">
+          <div className="flex-1 overflow-y-auto border border-accent rounded-2xl bg-accent/30 p-2">
             {initialDepartments.length === 0 ? (
-              <p className="text-[#5D6065] text-center p-4">No departments found.</p>
+              <p className="text-secondary text-center p-4">No departments found.</p>
             ) : (
               <ul className="space-y-2">
                 {initialDepartments.map(dept => (
-                  <li key={dept.id} className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-[#E4D4CC]">
+                  <li key={dept.id} className="flex items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-accent">
                     <div>
-                      <span className="font-bold text-[#4A3131] block">{dept.name}</span>
-                      <span className="text-xs text-[#5D6065] font-bold uppercase tracking-wide">{dept.faculty?.name}</span>
+                      <span className="font-bold text-primary block">{dept.name}</span>
+                      <span className="text-xs text-secondary font-bold uppercase tracking-wide">{dept.faculty?.name}</span>
                     </div>
                     <button onClick={() => handleDeleteDepartment(dept.id)} className="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition">
                       <Trash2 className="w-5 h-5" />

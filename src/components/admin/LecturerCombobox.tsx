@@ -61,7 +61,7 @@ export function LecturerCombobox({ departmentId, value, onChange }: LecturerComb
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium bg-white disabled:opacity-50"
+        className="w-full flex items-center justify-between p-3 border-2 border-accent rounded-xl focus:border-primary focus:outline-none transition text-primary font-medium bg-white disabled:opacity-50"
         disabled={!departmentId}
       >
         {value ? displayName : "Select a Lecturer..."}
@@ -69,11 +69,11 @@ export function LecturerCombobox({ departmentId, value, onChange }: LecturerComb
       </button>
 
       {open && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-[#E4D4CC] rounded-xl shadow-lg max-h-60 flex flex-col overflow-hidden">
-          <div className="flex items-center px-3 border-b border-[#E4D4CC]">
-            <Search className="w-4 h-4 text-[#5D6065] mr-2 opacity-50" />
+        <div className="absolute z-50 w-full mt-2 bg-white border border-accent rounded-xl shadow-lg max-h-60 flex flex-col overflow-hidden">
+          <div className="flex items-center px-3 border-b border-accent">
+            <Search className="w-4 h-4 text-secondary mr-2 opacity-50" />
             <input
-              className="w-full py-3 text-sm outline-none bg-transparent placeholder:text-[#5D6065]/50"
+              className="w-full py-3 text-sm outline-none bg-transparent placeholder:text-secondary/50"
               placeholder="Search by name or Staff ID..."
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -82,9 +82,9 @@ export function LecturerCombobox({ departmentId, value, onChange }: LecturerComb
           
           <div className="overflow-y-auto w-full p-1">
             {loading ? (
-              <div className="p-4 text-center text-sm text-[#5D6065]">Loading...</div>
+              <div className="p-4 text-center text-sm text-secondary">Loading...</div>
             ) : filteredLecturers.length === 0 ? (
-              <div className="p-4 text-center text-sm text-[#5D6065]">No lecturer found.</div>
+              <div className="p-4 text-center text-sm text-secondary">No lecturer found.</div>
             ) : (
               <>
                 <div
@@ -92,7 +92,7 @@ export function LecturerCombobox({ departmentId, value, onChange }: LecturerComb
                     onChange("");
                     setOpen(false);
                   }}
-                  className={`flex items-center px-3 py-2 text-sm rounded-md cursor-pointer text-red-600 font-bold hover:bg-[#F4EFEA] transition ${value === "" ? "bg-[#F4EFEA]" : ""}`}
+                  className={`flex items-center px-3 py-2 text-sm rounded-md cursor-pointer text-red-600 font-bold hover:bg-accent transition ${value === "" ? "bg-accent" : ""}`}
                 >
                   <Check className={`mr-2 h-4 w-4 ${value === "" ? "opacity-100" : "opacity-0"}`} />
                   Unassigned
@@ -104,7 +104,7 @@ export function LecturerCombobox({ departmentId, value, onChange }: LecturerComb
                       onChange(lecturer.id === value ? "" : lecturer.id);
                       setOpen(false);
                     }}
-                    className={`flex items-center px-3 py-2 text-sm rounded-md cursor-pointer text-[#4A3131] hover:bg-[#F4EFEA] transition ${value === lecturer.id ? "bg-[#F4EFEA]" : ""}`}
+                    className={`flex items-center px-3 py-2 text-sm rounded-md cursor-pointer text-primary hover:bg-accent transition ${value === lecturer.id ? "bg-accent" : ""}`}
                   >
                     <Check className={`mr-2 h-4 w-4 ${value === lecturer.id ? "opacity-100" : "opacity-0"}`} />
                     <div className="flex flex-col">

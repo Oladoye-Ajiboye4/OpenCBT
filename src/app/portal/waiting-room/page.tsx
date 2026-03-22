@@ -159,11 +159,11 @@ export default function WaitingRoomPage() {
     };
 
     return (
-        <main className="min-h-screen bg-[#F4EFEA] text-[#2E1F1A] p-6 md:p-10">
+        <main className="min-h-screen bg-accent text-primary p-6 md:p-10">
             <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <section className="bg-white rounded-3xl border border-[#CCBBAE] p-8 shadow-sm">
+                <section className="bg-white rounded-3xl border border-accent p-8 shadow-sm">
                     <h1 className="text-3xl font-black text-primary tracking-tight">Pre-Flight Guidelines</h1>
-                    <p className="mt-2 text-[#6B5146] font-medium">
+                    <p className="mt-2 text-secondary font-medium">
                         {context ? `Welcome ${context.studentName}.` : "Preparing your session..."} Review and
                         accept all rules before entering the exam hall.
                     </p>
@@ -180,12 +180,12 @@ export default function WaitingRoomPage() {
                             type="button"
                             onClick={testWebcam}
                             disabled={cameraStatus === "testing"}
-                            className="h-12 px-5 rounded-xl border-2 border-primary text-primary font-bold hover:bg-[#F2E6DD] transition disabled:opacity-60"
+                            className="h-12 px-5 rounded-xl border-2 border-primary text-primary font-bold hover:bg-accent/70 transition disabled:opacity-60"
                         >
                             {cameraStatus === "testing" ? "Testing Webcam..." : "Test Webcam"}
                         </button>
 
-                        <p className="text-sm font-medium text-[#6B5146]">
+                        <p className="text-sm font-medium text-secondary">
                             {cameraStatus === "granted"
                                 ? "Webcam access granted."
                                 : cameraStatus === "denied"
@@ -193,7 +193,7 @@ export default function WaitingRoomPage() {
                                     : "Run webcam test to verify permission before exam start."}
                         </p>
 
-                        <label className="flex items-start gap-3 p-4 rounded-xl border border-[#D8C7BC] bg-[#FAF6F2]">
+                        <label className="flex items-start gap-3 p-4 rounded-xl border border-accent bg-accent">
                             <input
                                 type="checkbox"
                                 checked={agreed}
@@ -216,32 +216,32 @@ export default function WaitingRoomPage() {
                     {error ? <p className="mt-4 text-sm font-semibold text-red-700">{error}</p> : null}
                 </section>
 
-                <section className="bg-white rounded-3xl border border-[#CCBBAE] p-8 shadow-sm">
+                <section className="bg-white rounded-3xl border border-accent p-8 shadow-sm">
                     <h2 className="text-3xl font-black text-primary tracking-tight">Waiting Room</h2>
-                    <p className="mt-2 text-[#6B5146] font-medium">
+                    <p className="mt-2 text-secondary font-medium">
                         Stay on this page. Once the lecturer activates the exam, you will be redirected
                         automatically.
                     </p>
 
-                    <div className="mt-7 p-5 rounded-2xl border border-[#D8C7BC] bg-[#F9F3ED]">
-                        <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#6B5146]">Exam Status</p>
+                    <div className="mt-7 p-5 rounded-2xl border border-accent bg-accent">
+                        <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">Exam Status</p>
                         <p className="mt-2 text-2xl font-black text-primary">
                             {context?.examStatus ?? "PENDING"}
                         </p>
                         {context?.examTitle ? (
-                            <p className="mt-2 text-sm font-semibold text-[#6B5146]">{context.examTitle}</p>
+                            <p className="mt-2 text-sm font-semibold text-secondary">{context.examTitle}</p>
                         ) : null}
                     </div>
 
                     {agreed ? (
-                        <div className="mt-6 p-5 rounded-2xl border border-[#D8C7BC] bg-[#F9F3ED]">
-                            <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#6B5146]">
+                        <div className="mt-6 p-5 rounded-2xl border border-accent bg-accent">
+                            <p className="text-xs font-bold uppercase tracking-[0.18em] text-secondary">
                                 Countdown To Scheduled Start
                             </p>
                             <p className="mt-2 text-5xl font-black text-primary">{countdown}</p>
                         </div>
                     ) : (
-                        <p className="mt-6 text-sm font-semibold text-[#6B5146]">
+                        <p className="mt-6 text-sm font-semibold text-secondary">
                             Accept the agreement to reveal the start countdown.
                         </p>
                     )}

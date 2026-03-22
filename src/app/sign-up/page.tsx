@@ -69,10 +69,10 @@ export default function SignUpPage() {
   };
 
   return (
-    <div ref={container} className="min-h-screen flex items-center justify-center bg-[#F4EFEA] p-6 font-sans">
-      <div className="bg-white p-10 rounded-3xl shadow-xl shadow-[#4A3131]/5 border border-[#E4D4CC] max-w-md w-full auth-fade">
-        <h1 className="text-3xl font-black text-[#4A3131] tracking-tight mb-2 text-center">School Admin Registration</h1>
-        <p className="text-[#5D6065] text-center mb-8 font-medium">Provision your institution on OpenCBT.</p>
+    <div ref={container} className="min-h-screen flex items-center justify-center bg-accent p-6 font-sans">
+      <div className="bg-white p-10 rounded-3xl shadow-xl shadow-primary/5 border border-accent max-w-md w-full auth-fade">
+        <h1 className="text-3xl font-black text-primary tracking-tight mb-2 text-center">School Admin Registration</h1>
+        <p className="text-secondary text-center mb-8 font-medium">Provision your institution on OpenCBT.</p>
 
         <div ref={errorRef} className={`mb-6 p-4 rounded-xl flex items-start gap-3 bg-red-50 text-red-600 border border-red-200 ${error ? 'block' : 'hidden'}`}>
           <ShieldAlert className="w-5 h-5 shrink-0" />
@@ -81,41 +81,41 @@ export default function SignUpPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-[#5D6065] mb-2" htmlFor="institutionName">Institution Name</label>
-            <input id="institutionName" name="institutionName" type="text" required disabled={isSubmitting} className={`w-full p-3.5 border-2 ${fieldErrors.institutionName ? 'border-red-400' : 'border-[#E4D4CC]'} rounded-xl focus:outline-none focus:border-[#4A3131] transition text-[#4A3131] font-medium disabled:opacity-60`} />
+            <label className="block text-sm font-bold text-secondary mb-2" htmlFor="institutionName">Institution Name</label>
+            <input id="institutionName" name="institutionName" type="text" required disabled={isSubmitting} className={`w-full p-3.5 border-2 ${fieldErrors.institutionName ? 'border-red-400' : 'border-accent'} rounded-xl focus:outline-none focus:border-primary transition text-primary font-medium disabled:opacity-60`} />
             {fieldErrors.institutionName && <p className="text-red-500 text-xs mt-1.5 font-bold">{fieldErrors.institutionName}</p>}
           </div>
           <div>
-            <label className="block text-sm font-bold text-[#5D6065] mb-2" htmlFor="institutionType">Institution Type</label>
-            <select id="institutionType" name="institutionType" required disabled={isSubmitting} className={`w-full p-3.5 border-2 ${fieldErrors.institutionType ? 'border-red-400' : 'border-[#E4D4CC]'} rounded-xl focus:outline-none focus:border-[#4A3131] transition text-[#4A3131] font-medium disabled:opacity-60 bg-white`}>
+            <label className="block text-sm font-bold text-secondary mb-2" htmlFor="institutionType">Institution Type</label>
+            <select id="institutionType" name="institutionType" required disabled={isSubmitting} className={`w-full p-3.5 border-2 ${fieldErrors.institutionType ? 'border-red-400' : 'border-accent'} rounded-xl focus:outline-none focus:border-primary transition text-primary font-medium disabled:opacity-60 bg-white`}>
               <option value="UNIVERSITY">University</option>
               <option value="SECONDARY">Secondary School</option>
             </select>
             {fieldErrors.institutionType && <p className="text-red-500 text-xs mt-1.5 font-bold">{fieldErrors.institutionType}</p>}
           </div>
           <div>
-            <label className="block text-sm font-bold text-[#5D6065] mb-2" htmlFor="email">Institute Email</label>
-            <input id="email" name="email" type="email" required disabled={isSubmitting} className="w-full p-3.5 border-2 border-[#E4D4CC] rounded-xl focus:outline-none focus:border-[#4A3131] transition text-[#4A3131] font-medium disabled:opacity-60" />
+            <label className="block text-sm font-bold text-secondary mb-2" htmlFor="email">Institute Email</label>
+            <input id="email" name="email" type="email" required disabled={isSubmitting} className="w-full p-3.5 border-2 border-accent rounded-xl focus:outline-none focus:border-primary transition text-primary font-medium disabled:opacity-60" />
             {fieldErrors.email && <p className="text-red-500 text-xs mt-1.5 font-bold">{fieldErrors.email}</p>}
           </div>
           <div>
-            <label className="block text-sm font-bold text-[#5D6065] mb-2" htmlFor="password">Administrator Password</label>
-            <input id="password" name="password" type="password" required disabled={isSubmitting} className={`w-full p-3.5 border-2 ${fieldErrors.password ? 'border-red-400' : 'border-[#E4D4CC]'} rounded-xl focus:outline-none focus:border-[#4A3131] transition text-[#4A3131] font-medium disabled:opacity-60`} />
+            <label className="block text-sm font-bold text-secondary mb-2" htmlFor="password">Administrator Password</label>
+            <input id="password" name="password" type="password" required disabled={isSubmitting} className={`w-full p-3.5 border-2 ${fieldErrors.password ? 'border-red-400' : 'border-accent'} rounded-xl focus:outline-none focus:border-primary transition text-primary font-medium disabled:opacity-60`} />
             {fieldErrors.password && <p className="text-red-500 text-xs mt-1.5 font-bold">{fieldErrors.password}</p>}
           </div>
           <div>
-            <label className="block text-sm font-bold text-[#5D6065] mb-2" htmlFor="confirmPassword">Confirm Password</label>
-            <input id="confirmPassword" name="confirmPassword" type="password" required disabled={isSubmitting} className={`w-full p-3.5 border-2 ${fieldErrors.confirmPassword ? 'border-red-400' : 'border-[#E4D4CC]'} rounded-xl focus:outline-none focus:border-[#4A3131] transition text-[#4A3131] font-medium disabled:opacity-60`} />
+            <label className="block text-sm font-bold text-secondary mb-2" htmlFor="confirmPassword">Confirm Password</label>
+            <input id="confirmPassword" name="confirmPassword" type="password" required disabled={isSubmitting} className={`w-full p-3.5 border-2 ${fieldErrors.confirmPassword ? 'border-red-400' : 'border-accent'} rounded-xl focus:outline-none focus:border-primary transition text-primary font-medium disabled:opacity-60`} />
             {fieldErrors.confirmPassword && <p className="text-red-500 text-xs mt-1.5 font-bold">{fieldErrors.confirmPassword}</p>}
           </div>
 
-          <button type="submit" disabled={isSubmitting} className="w-full py-4 mt-6 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] hover:-translate-y-0.5 transition-all shadow-md active:scale-[0.98] disabled:opacity-80 flex justify-center items-center h-14">
+          <button type="submit" disabled={isSubmitting} className="w-full py-4 mt-6 bg-primary text-white font-bold rounded-xl hover:bg-primary/85 hover:-translate-y-0.5 transition-all shadow-md active:scale-[0.98] disabled:opacity-80 flex justify-center items-center h-14">
             {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : "Deploy Instance"}
           </button>
         </form>
 
-        <p className="mt-8 text-center text-[#5D6065] font-medium text-sm">
-          Already registered? <Link href="/sign-in" className="text-[#4A3131] font-bold hover:underline">Sign In</Link>
+        <p className="mt-8 text-center text-secondary font-medium text-sm">
+          Already registered? <Link href="/sign-in" className="text-primary font-bold hover:underline">Sign In</Link>
         </p>
       </div>
     </div>

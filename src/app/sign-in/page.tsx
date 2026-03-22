@@ -58,10 +58,10 @@ export default function SignInPage() {
   };
 
   return (
-    <div ref={container} className="min-h-screen flex items-center justify-center bg-[#F4EFEA] p-6 font-sans">
-      <div className="bg-white p-10 rounded-3xl shadow-xl shadow-[#4A3131]/5 border border-[#E4D4CC] max-w-md w-full auth-fade">
-        <h1 className="text-3xl font-black text-[#4A3131] tracking-tight mb-2 text-center">Faculty Sign In</h1>
-        <p className="text-[#5D6065] text-center mb-8 font-medium">Log into your institutional OpenCBT deployment.</p>
+    <div ref={container} className="min-h-screen flex items-center justify-center bg-accent p-6 font-sans">
+      <div className="bg-white p-10 rounded-3xl shadow-xl shadow-primary/5 border border-accent max-w-md w-full auth-fade">
+        <h1 className="text-3xl font-black text-primary tracking-tight mb-2 text-center">Faculty Sign In</h1>
+        <p className="text-secondary text-center mb-8 font-medium">Log into your institutional OpenCBT deployment.</p>
 
         <div ref={errorRef} className={`mb-6 p-4 rounded-xl flex items-start gap-3 bg-red-50 text-red-600 border border-red-200 ${error ? 'block' : 'hidden'}`}>
           <ShieldAlert className="w-5 h-5 shrink-0" />
@@ -70,24 +70,24 @@ export default function SignInPage() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-[#5D6065] mb-2" htmlFor="identifier">Email (Admin) or Staff ID (Lecturer)</label>
-            <input id="identifier" name="identifier" required disabled={isSubmitting} className="w-full p-4 border-2 border-[#E4D4CC] rounded-xl focus:outline-none focus:border-[#4A3131] transition text-[#4A3131] font-bold disabled:opacity-60 placeholder:font-normal placeholder:text-[#8c8e91]" placeholder="e.g. FAC-2023 or email" />
+            <label className="block text-sm font-bold text-secondary mb-2" htmlFor="identifier">Email (Admin) or Staff ID (Lecturer)</label>
+            <input id="identifier" name="identifier" required disabled={isSubmitting} className="w-full p-4 border-2 border-accent rounded-xl focus:outline-none focus:border-primary transition text-primary font-bold disabled:opacity-60 placeholder:font-normal placeholder:text-secondary/60" placeholder="e.g. FAC-2023 or email" />
           </div>
           <div>
-            <label className="block text-sm font-bold text-[#5D6065] mb-2" htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" required disabled={isSubmitting} className="w-full p-4 border-2 border-[#E4D4CC] rounded-xl focus:outline-none focus:border-[#4A3131] transition text-[#4A3131] font-medium disabled:opacity-60" />
+            <label className="block text-sm font-bold text-secondary mb-2" htmlFor="password">Password</label>
+            <input id="password" name="password" type="password" required disabled={isSubmitting} className="w-full p-4 border-2 border-accent rounded-xl focus:outline-none focus:border-primary transition text-primary font-medium disabled:opacity-60" />
             <div className="mt-2 text-right">
-              <Link href="/forgot-password" className="text-sm text-[#4A3131] font-bold hover:underline">Forgot Password?</Link>
+              <Link href="/forgot-password" className="text-sm text-primary font-bold hover:underline">Forgot Password?</Link>
             </div>
           </div>
 
-          <button type="submit" disabled={isSubmitting} className="w-full py-4 mt-6 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] hover:-translate-y-0.5 transition-all shadow-md active:scale-[0.98] disabled:opacity-80 disabled:pointer-events-none flex justify-center items-center h-14">
+          <button type="submit" disabled={isSubmitting} className="w-full py-4 mt-6 bg-primary text-white font-bold rounded-xl hover:bg-primary/85 hover:-translate-y-0.5 transition-all shadow-md active:scale-[0.98] disabled:opacity-80 disabled:pointer-events-none flex justify-center items-center h-14">
             {isSubmitting ? <Loader2 className="w-6 h-6 animate-spin" /> : "Authenticate Session"}
           </button>
         </form>
 
-        <p className="mt-8 text-center text-[#5D6065] font-medium text-sm">
-          Are you a University Administrator? <Link href="/sign-up" className="text-[#4A3131] font-bold hover:underline">Deploy an Instance</Link>
+        <p className="mt-8 text-center text-secondary font-medium text-sm">
+          Are you a University Administrator? <Link href="/sign-up" className="text-primary font-bold hover:underline">Deploy an Instance</Link>
         </p>
       </div>
     </div>

@@ -30,20 +30,20 @@ export default async function LecturerOverview() {
     {
       label: "My Courses",
       value: totalCourses,
-      icon: <BookOpen className="w-8 h-8 text-[#4A3131]" />,
-      bg: "bg-[#F4EFEA]",
-      border: "border-[#E4D4CC]",
-      color: "text-[#4A3131]",
-      labelColor: "text-[#5D6065]",
+      icon: <BookOpen className="w-8 h-8 text-primary" />,
+      bg: "bg-accent",
+      border: "border-accent",
+      color: "text-primary",
+      labelColor: "text-secondary",
     },
     {
       label: "Active Exams",
       value: activeExams,
-      icon: <FileText className="w-8 h-8 text-[#4A3131]" />,
-      bg: "bg-[#F4EFEA]",
-      border: "border-[#E4D4CC]",
-      color: "text-[#4A3131]",
-      labelColor: "text-[#5D6065]",
+      icon: <FileText className="w-8 h-8 text-primary" />,
+      bg: "bg-accent",
+      border: "border-accent",
+      color: "text-primary",
+      labelColor: "text-secondary",
     },
     {
       label: "Unresolved Flags",
@@ -59,10 +59,10 @@ export default async function LecturerOverview() {
   return (
     <div className="max-w-6xl mx-auto space-y-8 font-sans">
       <div>
-        <h1 className="text-4xl font-black text-[#4A3131] tracking-tight">
+        <h1 className="text-4xl font-black text-primary tracking-tight">
           Welcome, {lecturer.name || "Lecturer"}
         </h1>
-        <p className="text-[#5D6065] text-lg mt-2 font-medium">
+        <p className="text-secondary text-lg mt-2 font-medium">
           Monitor your assigned courses, active provisions, and AI proctoring anomalies seamlessly.
         </p>
       </div>
@@ -71,7 +71,7 @@ export default async function LecturerOverview() {
         {metrics.map((m) => (
           <div
             key={m.label}
-            className={`bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] flex flex-col items-center text-center hover:shadow-md transition`}
+            className={`bg-white p-8 rounded-3xl shadow-sm border border-accent flex flex-col items-center text-center hover:shadow-md transition`}
           >
             <div className={`w-16 h-16 ${m.bg} rounded-2xl flex items-center justify-center mb-4 border ${m.border}`}>
               {m.icon}

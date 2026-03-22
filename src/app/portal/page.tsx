@@ -78,29 +78,29 @@ export default function ExamPortalLogin() {
   return (
     <div
       ref={container}
-      className="min-h-screen flex items-center justify-center bg-[#F4EFEA] p-6 font-sans relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center bg-accent p-6 font-sans relative overflow-hidden"
     >
       {/* Ambient background glow */}
       <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[700px] h-[700px] bg-[#4A3131] rounded-full blur-[160px] opacity-[0.07]" />
+        <div className="w-175 h-175 bg-primary rounded-full blur-[160px] opacity-[0.07]" />
       </div>
 
       <div className="relative z-10 w-full max-w-md">
         {/* Header above card */}
         <div className="portal-anim text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl border border-[#E4D4CC] shadow-sm mb-4">
-            <Shield className="w-8 h-8 text-[#4A3131]" />
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-white rounded-2xl border border-accent shadow-sm mb-4">
+            <Shield className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-3xl font-black text-[#4A3131] tracking-tight">
+          <h1 className="text-3xl font-black text-primary tracking-tight">
             OpenCBT Student Portal
           </h1>
-          <p className="text-[#5D6065] mt-2 font-medium text-base leading-relaxed">
+          <p className="text-secondary mt-2 font-medium text-base leading-relaxed">
             Enter your credentials to authenticate and launch your examination.
           </p>
         </div>
 
         {/* Main Card */}
-        <div className="portal-anim bg-white rounded-[2rem] shadow-xl shadow-[#4A3131]/8 border border-[#E4D4CC] p-8">
+        <div className="portal-anim bg-white rounded-4xl shadow-xl shadow-primary/8 border border-accent p-8">
           {/* Error Banner */}
           <div
             ref={errorRef}
@@ -116,7 +116,7 @@ export default function ExamPortalLogin() {
             {/* Matriculation Number */}
             <div>
               <label
-                className="block text-xs font-bold text-[#5D6065] mb-2 uppercase tracking-widest"
+                className="block text-xs font-bold text-secondary mb-2 uppercase tracking-widest"
                 htmlFor="matricNumber"
               >
                 Matriculation Number
@@ -128,14 +128,14 @@ export default function ExamPortalLogin() {
                 autoComplete="off"
                 disabled={isSubmitting}
                 placeholder="e.g. 21/CSC/001"
-                className="w-full p-4 border-2 border-[#E4D4CC] rounded-xl focus:outline-none focus:border-[#4A3131] transition-colors text-[#4A3131] font-bold text-base disabled:opacity-60 placeholder:text-[#C5B9B3] placeholder:font-normal bg-[#FDFAF8]"
+                className="w-full p-4 border-2 border-accent rounded-xl focus:outline-none focus:border-primary transition-colors text-primary font-bold text-base disabled:opacity-60 placeholder:text-secondary/50 placeholder:font-normal bg-accent"
               />
             </div>
 
             {/* PIN */}
             <div>
               <label
-                className="block text-xs font-bold text-[#5D6065] mb-2 uppercase tracking-widest"
+                className="block text-xs font-bold text-secondary mb-2 uppercase tracking-widest"
                 htmlFor="pin"
               >
                 Exam PIN
@@ -149,11 +149,11 @@ export default function ExamPortalLogin() {
                   disabled={isSubmitting}
                   placeholder="● ● ● ● ● ●"
                   maxLength={6}
-                  className="w-full p-4 pl-12 border-2 border-[#E4D4CC] rounded-xl focus:outline-none focus:border-[#4A3131] transition-colors text-[#4A3131] font-mono font-black text-2xl tracking-[0.4em] uppercase disabled:opacity-60 placeholder:tracking-normal placeholder:font-sans placeholder:font-normal placeholder:text-[#C5B9B3] placeholder:text-base bg-[#FDFAF8]"
+                  className="w-full p-4 pl-12 border-2 border-accent rounded-xl focus:outline-none focus:border-primary transition-colors text-primary font-mono font-black text-2xl tracking-[0.4em] uppercase disabled:opacity-60 placeholder:tracking-normal placeholder:font-sans placeholder:font-normal placeholder:text-secondary/50 placeholder:text-base bg-accent"
                 />
-                <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5D6065]/50 pointer-events-none" />
+                <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/50 pointer-events-none" />
               </div>
-              <p className="text-xs text-[#5D6065]/70 mt-1.5 font-medium">
+              <p className="text-xs text-secondary/70 mt-1.5 font-medium">
                 6-character alphanumeric code from your credentials email.
               </p>
             </div>
@@ -162,7 +162,7 @@ export default function ExamPortalLogin() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full mt-3 h-16 bg-[#4A3131] text-white font-black text-lg rounded-xl hover:bg-[#3a2626] hover:-translate-y-0.5 transition-all shadow-lg shadow-[#4A3131]/20 active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none flex justify-center items-center gap-3"
+              className="w-full mt-3 h-16 bg-primary text-white font-black text-lg rounded-xl hover:bg-primary/90 hover:-translate-y-0.5 transition-all shadow-lg shadow-primary/20 active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none flex justify-center items-center gap-3"
             >
               {isSubmitting ? (
                 <>
@@ -177,7 +177,7 @@ export default function ExamPortalLogin() {
         </div>
 
         {/* Footer note */}
-        <p className="portal-anim text-center text-xs text-[#5D6065]/60 font-medium mt-6">
+        <p className="portal-anim text-center text-xs text-secondary/60 font-medium mt-6">
           Your credentials were sent to your institution email. Contact your
           lecturer if you did not receive them.
         </p>

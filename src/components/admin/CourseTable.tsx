@@ -62,26 +62,26 @@ export default function CourseTable() {
 
   return (
     <div className="w-full">
-      <div className="overflow-x-auto rounded-xl shadow-sm bg-white border border-[#E4D4CC]/50">
+      <div className="overflow-x-auto rounded-xl shadow-sm bg-white border border-accent/50">
         <table ref={tableRef} className="w-full text-left border-collapse">
-          <thead className="bg-[#E4D4CC]/30 border-b border-[#E4D4CC]">
+          <thead className="bg-accent/30 border-b border-accent">
             <tr>
-              <th className="p-5 font-bold text-[#4A3131]">Course Title</th>
-              <th className="p-5 font-bold text-[#4A3131]">Description</th>
-              <th className="p-5 font-bold text-[#4A3131]">Date Created</th>
-              <th className="p-5 font-bold text-[#4A3131] text-right">Actions</th>
+              <th className="p-5 font-bold text-primary">Course Title</th>
+              <th className="p-5 font-bold text-primary">Description</th>
+              <th className="p-5 font-bold text-primary">Date Created</th>
+              <th className="p-5 font-bold text-primary text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {MOCK_COURSES.map(course => (
-              <tr key={course.id} className="border-b border-[#E4D4CC]/30 hover:bg-[#F4EFEA]/60 transition-colors">
-                <td className="p-5 font-semibold text-[#4A3131]">{course.title}</td>
-                <td className="p-5 text-[#5D6065] max-w-md truncate">{course.description}</td>
-                <td className="p-5 text-[#5D6065]">{course.createdAt.toLocaleDateString()}</td>
+              <tr key={course.id} className="border-b border-accent/30 hover:bg-accent/60 transition-colors">
+                <td className="p-5 font-semibold text-primary">{course.title}</td>
+                <td className="p-5 text-secondary max-w-md truncate">{course.description}</td>
+                <td className="p-5 text-secondary">{course.createdAt.toLocaleDateString()}</td>
                 <td className="p-5 text-right">
                   <button
                     onClick={() => openModal(course)}
-                    className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-[#E4D4CC]/40 text-[#4A3131] hover:bg-[#4A3131] hover:text-white transition-all shadow-sm"
+                    className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-accent/40 text-primary hover:bg-primary hover:text-white transition-all shadow-sm"
                     title="Delegate Access"
                   >
                     <Share2 className="w-4 h-4" />
@@ -94,30 +94,30 @@ export default function CourseTable() {
       </div>
 
       {isModalOpen && selectedCourse && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#5D6065]/20 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-secondary/20 backdrop-blur-sm p-4">
           {/* We could animate this modal entrance with GSAP, but standard Tailwind animate works or we can just apply a simple scale */}
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-[#E4D4CC] animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex justify-between items-center px-6 py-5 border-b border-[#E4D4CC]/60 bg-[#F4EFEA]/30">
-              <h3 className="font-bold text-xl text-[#4A3131]">Delegate to Lecturer</h3>
-              <button onClick={closeModal} className="text-[#5D6065] hover:text-[#4A3131] transition bg-white rounded-full p-1.5 shadow-sm border border-[#E4D4CC]">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-accent animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center px-6 py-5 border-b border-accent/60 bg-accent/30">
+              <h3 className="font-bold text-xl text-primary">Delegate to Lecturer</h3>
+              <button onClick={closeModal} className="text-secondary hover:text-primary transition bg-white rounded-full p-1.5 shadow-sm border border-accent">
                 <X className="w-5 h-5" />
               </button>
             </div>
             
             <div className="p-8 space-y-8">
-              <div className="bg-[#F4EFEA] p-4 rounded-xl border border-[#E4D4CC]/50">
-                <p className="text-sm font-medium text-[#5D6065] uppercase tracking-wider mb-1">Course target</p>
-                <p className="font-bold text-lg text-[#4A3131]">{selectedCourse.title}</p>
+              <div className="bg-accent p-4 rounded-xl border border-accent/50">
+                <p className="text-sm font-medium text-secondary uppercase tracking-wider mb-1">Course target</p>
+                <p className="font-bold text-lg text-primary">{selectedCourse.title}</p>
               </div>
 
               <form onSubmit={handleAssign} className="space-y-4">
                 <div className="space-y-3">
-                  <label className="block text-sm font-bold text-[#5D6065]">
+                  <label className="block text-sm font-bold text-secondary">
                     Lecturer Email Address
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <Mail className="h-5 w-5 text-[#5D6065]/60" />
+                      <Mail className="h-5 w-5 text-secondary/60" />
                     </div>
                     <input
                       type="email"
@@ -125,29 +125,29 @@ export default function CourseTable() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="lecturer@opencbt.edu"
-                      className="w-full pl-12 p-3.5 border-2 border-[#E4D4CC] rounded-xl focus:outline-none focus:border-[#4A3131] bg-white text-[#4A3131] font-medium transition"
+                      className="w-full pl-12 p-3.5 border-2 border-accent rounded-xl focus:outline-none focus:border-primary bg-white text-primary font-medium transition"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 mt-2 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-md"
+                    className="w-full py-3.5 mt-2 bg-primary text-white font-bold rounded-xl hover:bg-primary/85 transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-md"
                   >
                     {loading ? "Assigning Access..." : "Grant Lecturer Access"}
                   </button>
                 </div>
                 {message && (
-                  <div className="p-3 rounded-xl text-sm font-semibold bg-[#E4D4CC]/50 text-[#4A3131] text-center border border-[#E4D4CC]">
+                  <div className="p-3 rounded-xl text-sm font-semibold bg-accent/50 text-primary text-center border border-accent">
                     {message}
                   </div>
                 )}
               </form>
 
-              <div className="pt-6 border-t border-[#E4D4CC]/60">
+              <div className="pt-6 border-t border-accent/60">
                 <button
                   type="button"
                   onClick={handleCopyLink}
-                  className="w-full flex items-center justify-center gap-2 py-3.5 px-4 border-2 border-[#E4D4CC]/80 rounded-xl hover:bg-[#F4EFEA] transition text-[#5D6065] hover:text-[#4A3131] font-bold bg-white shadow-sm"
+                  className="w-full flex items-center justify-center gap-2 py-3.5 px-4 border-2 border-accent/80 rounded-xl hover:bg-accent transition text-secondary hover:text-primary font-bold bg-white shadow-sm"
                 >
                   {copied ? <Check className="w-5 h-5 text-green-600" /> : <LinkIcon className="w-5 h-5" />}
                   {copied ? "Link Copied!" : "Copy Private Course Link"}

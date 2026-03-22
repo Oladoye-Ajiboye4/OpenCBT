@@ -130,25 +130,25 @@ export default function ManageCourses() {
     <div ref={container} className="max-w-7xl mx-auto space-y-8 font-sans">
       <div className="flex justify-between items-end anim-item">
         <div>
-          <h1 className="text-4xl font-black text-[#4A3131] tracking-tight">Manage Courses</h1>
-          <p className="text-[#5D6065] text-lg mt-2 font-medium">Create enterprise courses and assign designated faculty natively.</p>
+          <h1 className="text-4xl font-black text-primary tracking-tight">Manage Courses</h1>
+          <p className="text-secondary text-lg mt-2 font-medium">Create enterprise courses and assign designated faculty natively.</p>
         </div>
         <button 
           onClick={() => setIsBulkOpen(true)}
-          className="bg-white border-2 border-[#E4D4CC] text-[#4A3131] hover:bg-[#F4EFEA] hover:border-[#4A3131] px-5 py-3 rounded-xl font-bold flex items-center gap-2 transition"
+          className="bg-white border-2 border-accent text-primary hover:bg-accent hover:border-primary px-5 py-3 rounded-xl font-bold flex items-center gap-2 transition"
         >
           <UploadCloud className="w-5 h-5" />
           Bulk Upload Courses
         </button>
       </div>
 
-      <div className="bg-white p-6 rounded-3xl shadow-sm border border-[#E4D4CC] anim-item flex gap-4">
+      <div className="bg-white p-6 rounded-3xl shadow-sm border border-accent anim-item flex gap-4">
         <div className="flex-1">
-          <label className="block text-sm font-bold text-[#5D6065] mb-2">Faculty</label>
+          <label className="block text-sm font-bold text-secondary mb-2">Faculty</label>
           <select 
             value={selectedFaculty} 
             onChange={e => setSelectedFaculty(e.target.value)}
-            className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium bg-white"
+            className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary focus:outline-none transition text-primary font-medium bg-white"
           >
             <option value="">Select Faculty...</option>
             {faculties.map(f => (
@@ -157,12 +157,12 @@ export default function ManageCourses() {
           </select>
         </div>
         <div className="flex-1">
-          <label className="block text-sm font-bold text-[#5D6065] mb-2">Department</label>
+          <label className="block text-sm font-bold text-secondary mb-2">Department</label>
           <select 
             value={selectedDept} 
             onChange={e => setSelectedDept(e.target.value)}
             disabled={!selectedFaculty}
-            className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium bg-white disabled:opacity-50"
+            className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary focus:outline-none transition text-primary font-medium bg-white disabled:opacity-50"
           >
             <option value="">Select Department...</option>
             {departments.map(d => (
@@ -171,12 +171,12 @@ export default function ManageCourses() {
           </select>
         </div>
         <div className="flex-1">
-          <label className="block text-sm font-bold text-[#5D6065] mb-2">Level</label>
+          <label className="block text-sm font-bold text-secondary mb-2">Level</label>
           <select 
             value={selectedLevel} 
             onChange={e => setSelectedLevel(e.target.value)}
             disabled={!selectedDept}
-            className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium bg-white disabled:opacity-50"
+            className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary focus:outline-none transition text-primary font-medium bg-white disabled:opacity-50"
           >
             <option value="">Select Level...</option>
             <option value="100L">100 Level</option>
@@ -189,35 +189,35 @@ export default function ManageCourses() {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-        <div className="xl:col-span-1 bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] anim-item h-max">
+        <div className="xl:col-span-1 bg-white p-8 rounded-3xl shadow-sm border border-accent anim-item h-max">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-[#F4EFEA] rounded-lg flex items-center justify-center border border-[#E4D4CC]">
-              <PlusCircle className="w-5 h-5 text-[#4A3131]" />
+            <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center border border-accent">
+              <PlusCircle className="w-5 h-5 text-primary" />
             </div>
-            <h2 className="text-xl font-bold text-[#4A3131]">Deploy Course</h2>
+            <h2 className="text-xl font-bold text-primary">Deploy Course</h2>
           </div>
           
           {(!selectedDept || !selectedLevel) ? (
-            <div className="p-4 bg-[#F4EFEA] border border-[#E4D4CC] rounded-xl text-center text-sm font-bold text-[#5D6065]">
+            <div className="p-4 bg-accent border border-accent rounded-xl text-center text-sm font-bold text-secondary">
               Select a Department and Level above to create a course.
             </div>
           ) : (
             <form className="space-y-4" onSubmit={onSubmit}>
               <div>
-                <label className="block text-sm font-bold text-[#5D6065] mb-2">Course Code</label>
-                <input name="code" required className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-mono font-bold uppercase tracking-wider" placeholder="CSC301" />
+                <label className="block text-sm font-bold text-secondary mb-2">Course Code</label>
+                <input name="code" required className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary focus:outline-none transition text-primary font-mono font-bold uppercase tracking-wider" placeholder="CSC301" />
               </div>
               <div>
-                <label className="block text-sm font-bold text-[#5D6065] mb-2">Course Title</label>
-                <input name="title" required className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium" placeholder="Data Structures" />
+                <label className="block text-sm font-bold text-secondary mb-2">Course Title</label>
+                <input name="title" required className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary focus:outline-none transition text-primary font-medium" placeholder="Data Structures" />
               </div>
               <div>
-                <label className="block text-sm font-bold text-[#5D6065] mb-2">Assign Lecturer</label>
+                <label className="block text-sm font-bold text-secondary mb-2">Assign Lecturer</label>
                 {/* Need to implement a hidden input to hold the LecturerCombobox value so FormData works */}
                 <LecturerComboboxWrapper departmentId={selectedDept} />
               </div>
 
-              <button type="submit" disabled={isSubmitting} className="w-full py-4 mt-6 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition h-14 disabled:opacity-70 disabled:cursor-not-allowed">
+              <button type="submit" disabled={isSubmitting} className="w-full py-4 mt-6 bg-primary text-white font-bold rounded-xl hover:bg-primary/85 transition h-14 disabled:opacity-70 disabled:cursor-not-allowed">
                 {isSubmitting ? (
                   <div className="flex justify-center items-center">
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -228,29 +228,29 @@ export default function ManageCourses() {
           )}
         </div>
 
-        <div className="xl:col-span-2 bg-white rounded-3xl shadow-sm border border-[#E4D4CC] overflow-hidden anim-item">
-          <div className="p-6 border-b border-[#E4D4CC] bg-[#F4EFEA]/30">
-            <h3 className="text-xl font-bold text-[#4A3131]">Active Deployments</h3>
+        <div className="xl:col-span-2 bg-white rounded-3xl shadow-sm border border-accent overflow-hidden anim-item">
+          <div className="p-6 border-b border-accent bg-accent/30">
+            <h3 className="text-xl font-bold text-primary">Active Deployments</h3>
           </div>
           <div className="overflow-x-auto min-h-[300px]">
             {(!selectedFaculty || !selectedDept || !selectedLevel) ? (
-               <div className="flex flex-col items-center justify-center p-12 text-[#5D6065]">
+               <div className="flex flex-col items-center justify-center p-12 text-secondary">
                   <BookOpen className="w-12 h-12 mb-4 opacity-30" />
                   <p className="font-bold text-lg">No Filters Selected</p>
                   <p className="text-sm">Please select completely down to the Level to view courses.</p>
                </div>
             ) : loadingCourses ? (
               <div className="flex justify-center p-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#4A3131]"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
               </div>
             ) : courses.length === 0 ? (
-               <div className="flex flex-col items-center justify-center p-12 text-[#5D6065]">
-                  <p className="font-bold text-lg text-[#4A3131]">No Courses Found</p>
+               <div className="flex flex-col items-center justify-center p-12 text-secondary">
+                  <p className="font-bold text-lg text-primary">No Courses Found</p>
                   <p className="text-sm">There are no courses deployed for {selectedLevel} yet.</p>
                </div>
             ) : (
-            <table className="w-full text-left text-sm text-[#5D6065]">
-              <thead className="bg-[#F4EFEA] text-xs uppercase font-bold text-[#4A3131]">
+            <table className="w-full text-left text-sm text-secondary">
+              <thead className="bg-accent text-xs uppercase font-bold text-primary">
                 <tr>
                   <th className="px-6 py-4">Course Code</th>
                   <th className="px-6 py-4">Course Title</th>
@@ -258,15 +258,15 @@ export default function ManageCourses() {
                   <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E4D4CC]">
+              <tbody className="divide-y divide-accent">
                 {courses.map(c => (
-                  <tr key={c.id} className="hover:bg-[#F4EFEA]/20 transition group">
-                    <td className="px-6 py-4 font-mono font-bold tracking-wide text-[#4A3131]">{c.code}</td>
+                  <tr key={c.id} className="hover:bg-accent/20 transition group">
+                    <td className="px-6 py-4 font-mono font-bold tracking-wide text-primary">{c.code}</td>
                     <td className="px-6 py-4 font-bold">{c.title}</td>
                     <td className="px-6 py-4 font-medium">
                        {c.lecturer ? (
                          <div className="flex items-center gap-2">
-                           <div className="w-6 h-6 rounded-full bg-[#E4D4CC] flex items-center justify-center text-[10px] font-bold text-[#4A3131]">
+                           <div className="w-6 h-6 rounded-full bg-accent flex items-center justify-center text-[10px] font-bold text-primary">
                              {(c.lecturer.name || "L").charAt(0).toUpperCase()}
                            </div>
                            {c.lecturer.name}
@@ -279,7 +279,7 @@ export default function ManageCourses() {
                     </td>
                     <td className="px-6 py-4 text-right">
                        <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition">
-                         <button className="p-2 text-[#5D6065] hover:bg-[#E4D4CC]/50 rounded-lg transition" title="Edit (Coming Soon)">
+                         <button className="p-2 text-secondary hover:bg-accent/50 rounded-lg transition" title="Edit (Coming Soon)">
                            <Edit2 className="w-4 h-4" />
                          </button>
                          <button onClick={() => handleDelete(c.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition" title="Delete Course">

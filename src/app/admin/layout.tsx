@@ -21,12 +21,12 @@ export default async function AdminLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-[#F4EFEA] text-[#5D6065] flex font-sans">
+    <div className="min-h-screen bg-accent text-secondary flex font-sans">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-[#E4D4CC] flex flex-col items-center py-8 shadow-sm shrink-0">
+      <aside className="w-64 bg-white border-r border-accent flex flex-col items-center py-8 shadow-sm shrink-0">
         <div className="w-full px-6 mb-10 text-center">
-          <h1 className="text-3xl font-black text-[#4A3131] tracking-tight">OpenCBT</h1>
-          <p className="text-xs font-bold text-[#5D6065] uppercase tracking-widest mt-1">Admin Panel</p>
+          <h1 className="text-3xl font-black text-primary tracking-tight">OpenCBT</h1>
+          <p className="text-xs font-bold text-secondary uppercase tracking-widest mt-1">Admin Panel</p>
         </div>
         <nav className="flex flex-col gap-3 w-full px-6">
           {navLinks.map(({ href, label, icon, exact }) => {
@@ -36,8 +36,8 @@ export default async function AdminLayout({
                 key={href}
                 href={href}
                 className={`flex items-center gap-3 p-3.5 rounded-xl transition-all duration-300 font-bold ${isActive
-                    ? "bg-[#4A3131] text-white shadow-md shadow-[#4A3131]/20"
-                    : "text-[#5D6065] hover:bg-[#E4D4CC]/50 hover:text-[#4A3131]"
+                    ? "bg-primary text-white shadow-md shadow-primary/20"
+                    : "text-secondary hover:bg-accent/50 hover:text-primary"
                   }`}
               >
                 {icon}
@@ -49,7 +49,7 @@ export default async function AdminLayout({
 
         <div className="mt-auto w-full px-6 pt-10 pb-4">
           <LogoutButton
-            className="flex items-center justify-center gap-3 w-full p-3.5 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition-all shadow-md shadow-[#4A3131]/20 group"
+            className="flex items-center justify-center gap-3 w-full p-3.5 bg-primary text-white font-bold rounded-xl hover:bg-primary/85 transition-all shadow-md shadow-primary/20 group"
             iconClassName="w-5 h-5 group-hover:-translate-x-1 transition-transform"
           />
         </div>

@@ -71,24 +71,24 @@ export default async function AdminResultsPage() {
     return (
         <div className="max-w-7xl mx-auto space-y-8 pb-16">
             <section className="bg-white rounded-3xl border border-accent p-7 shadow-sm">
-                <p className="text-xs font-bold tracking-[0.16em] uppercase text-[#7A6156]">Admin Publication Queue</p>
+                <p className="text-xs font-bold tracking-[0.16em] uppercase text-secondary/80">Admin Publication Queue</p>
                 <h1 className="mt-2 text-3xl font-black text-primary">Approved Results</h1>
-                <p className="mt-2 text-sm font-semibold text-[#6A4D43]">
+                <p className="mt-2 text-sm font-semibold text-secondary">
                     Publish lecturer-approved results to finalize release and email students automatically.
                 </p>
             </section>
 
             <section className="bg-white rounded-3xl border border-accent shadow-sm overflow-hidden">
-                <div className="p-5 border-b border-accent bg-[#F4EFEA]/30">
+                <div className="p-5 border-b border-accent bg-accent/30">
                     <h2 className="text-lg font-black text-primary">Pending Publication</h2>
                 </div>
 
                 {results.length === 0 ? (
-                    <p className="p-6 text-sm font-semibold text-[#6A4D43]">No approved results awaiting publication.</p>
+                    <p className="p-6 text-sm font-semibold text-secondary">No approved results awaiting publication.</p>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm text-left text-secondary">
-                            <thead className="bg-[#F4EFEA] text-xs uppercase font-bold text-primary">
+                            <thead className="bg-accent text-xs uppercase font-bold text-primary">
                                 <tr>
                                     <th className="px-5 py-4">Student</th>
                                     <th className="px-5 py-4">Exam</th>
@@ -122,7 +122,7 @@ export default async function AdminResultsPage() {
                                                 <form action={action}>
                                                     <button
                                                         type="submit"
-                                                        className="px-3 py-2 rounded-lg bg-primary text-white text-xs font-bold hover:bg-[#5D3D3D]"
+                                                        className="px-3 py-2 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary/90"
                                                     >
                                                         Publish Results
                                                     </button>

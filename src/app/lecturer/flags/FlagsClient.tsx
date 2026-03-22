@@ -36,7 +36,7 @@ export function FlagsClient({ flags }: Props) {
             </div>
 
             <div className="bg-white rounded-3xl shadow-sm border border-accent overflow-hidden">
-                <div className="p-6 border-b border-accent bg-[#F4EFEA]/30 flex justify-between items-center">
+                <div className="p-6 border-b border-accent bg-accent/30 flex justify-between items-center">
                     <h3 className="text-xl font-bold text-primary">Incident Evidence Registry</h3>
                     <span className="flex items-center gap-2 text-sm font-bold text-red-600 bg-red-50 px-3 py-1.5 rounded-full border border-red-200">
                         <ShieldAlert className="w-4 h-4" />
@@ -45,11 +45,11 @@ export function FlagsClient({ flags }: Props) {
                 </div>
 
                 {flags.length === 0 ? (
-                    <p className="p-6 text-sm font-semibold text-[#6A4D43]">No proctoring flags yet.</p>
+                    <p className="p-6 text-sm font-semibold text-secondary">No proctoring flags yet.</p>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-left text-sm text-secondary">
-                            <thead className="bg-[#F4EFEA] text-xs uppercase font-bold text-primary">
+                            <thead className="bg-accent text-xs uppercase font-bold text-primary">
                                 <tr>
                                     <th className="px-6 py-4">Student</th>
                                     <th className="px-6 py-4">Exam</th>
@@ -77,7 +77,7 @@ export function FlagsClient({ flags }: Props) {
                                             <button
                                                 type="button"
                                                 onClick={() => setSelectedFlagId(record.id)}
-                                                className="inline-flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg border border-accent text-primary hover:bg-[#F4EFEA]"
+                                                className="inline-flex items-center gap-2 text-xs font-bold px-3 py-2 rounded-lg border border-accent text-primary hover:bg-accent"
                                             >
                                                 <Eye className="w-4 h-4" />
                                                 View Evidence
@@ -99,19 +99,19 @@ export function FlagsClient({ flags }: Props) {
                             <button
                                 type="button"
                                 onClick={() => setSelectedFlagId(null)}
-                                className="text-sm font-bold px-3 py-1.5 rounded-lg border border-[#D9C9BC] hover:bg-[#F4EFEA]"
+                                className="text-sm font-bold px-3 py-1.5 rounded-lg border border-accent hover:bg-accent"
                             >
                                 Close
                             </button>
                         </div>
                         <div className="p-5 space-y-4">
                             <div>
-                                <p className="text-xs uppercase tracking-[0.14em] font-bold text-[#7A6156]">Description</p>
+                                <p className="text-xs uppercase tracking-[0.14em] font-bold text-secondary/80">Description</p>
                                 <p className="mt-1 text-sm font-semibold text-primary">{selectedFlag.description}</p>
                             </div>
 
                             <div>
-                                <p className="text-xs uppercase tracking-[0.14em] font-bold text-[#7A6156]">Snapshot</p>
+                                <p className="text-xs uppercase tracking-[0.14em] font-bold text-secondary/80">Snapshot</p>
                                 {selectedFlag.snapshotUrl ? (
                                     <img
                                         src={selectedFlag.snapshotUrl}
@@ -119,7 +119,7 @@ export function FlagsClient({ flags }: Props) {
                                         className="mt-2 w-full max-h-105 object-contain rounded-xl border border-accent"
                                     />
                                 ) : (
-                                    <p className="mt-2 text-sm font-semibold text-[#6A4D43]">No snapshot captured for this event.</p>
+                                    <p className="mt-2 text-sm font-semibold text-secondary">No snapshot captured for this event.</p>
                                 )}
                             </div>
                         </div>

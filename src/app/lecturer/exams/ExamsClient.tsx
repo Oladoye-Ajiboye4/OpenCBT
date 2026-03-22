@@ -48,56 +48,56 @@ export function ExamsClient({ courses, initialExams }: { courses: Course[], init
     <div ref={container} className="max-w-7xl mx-auto space-y-8 font-sans pb-20">
       <div className="flex justify-between items-end anim-item">
         <div>
-          <h1 className="text-4xl font-black text-[#4A3131] tracking-tight">Examination Hub</h1>
-          <p className="text-[#5D6065] text-lg mt-2 font-medium">Create and distribute zero-trust examination sessions securely.</p>
+          <h1 className="text-4xl font-black text-primary tracking-tight">Examination Hub</h1>
+          <p className="text-secondary text-lg mt-2 font-medium">Create and distribute zero-trust examination sessions securely.</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-        <div className="xl:col-span-1 bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] anim-item h-max">
+        <div className="xl:col-span-1 bg-white p-8 rounded-3xl shadow-sm border border-accent anim-item h-max">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-[#F4EFEA] rounded-lg flex items-center justify-center border border-[#E4D4CC]">
-              <PlusCircle className="w-5 h-5 text-[#4A3131]" />
+            <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center border border-accent">
+              <PlusCircle className="w-5 h-5 text-primary" />
             </div>
-            <h2 className="text-xl font-bold text-[#4A3131]">Deploy Exam</h2>
+            <h2 className="text-xl font-bold text-primary">Deploy Exam</h2>
           </div>
           <form className="space-y-4" onSubmit={onSubmit}>
             <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">Examination Title</label>
-              <input name="title" required className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium" placeholder="Midterm Assessment" />
+              <label className="block text-sm font-bold text-secondary mb-2">Examination Title</label>
+              <input name="title" required className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary focus:outline-none transition text-primary font-medium" placeholder="Midterm Assessment" />
             </div>
             <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">Target Course</label>
-              <select name="courseId" required className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium bg-white appearance-none">
+              <label className="block text-sm font-bold text-secondary mb-2">Target Course</label>
+              <select name="courseId" required className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary focus:outline-none transition text-primary font-medium bg-white appearance-none">
                 <option value="">Select Course...</option>
                 {courses.map(c => <option key={c.id} value={c.id}>{c.code} - {c.title}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">Duration (Minutes)</label>
-              <input type="number" name="duration" required min="1" className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium" placeholder="120" />
+              <label className="block text-sm font-bold text-secondary mb-2">Duration (Minutes)</label>
+              <input type="number" name="duration" required min="1" className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary focus:outline-none transition text-primary font-medium" placeholder="120" />
             </div>
             <div>
-              <label className="block text-sm font-bold text-[#5D6065] mb-2">Scheduled Date & Time</label>
-              <input type="datetime-local" name="scheduledDate" required className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] focus:outline-none transition text-[#4A3131] font-medium bg-white" />
+              <label className="block text-sm font-bold text-secondary mb-2">Scheduled Date & Time</label>
+              <input type="datetime-local" name="scheduledDate" required className="w-full p-3 border-2 border-accent rounded-xl focus:border-primary focus:outline-none transition text-primary font-medium bg-white" />
             </div>
 
-            <button type="submit" disabled={isSubmitting} className="w-full py-4 mt-6 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition h-14 active:scale-[0.98] disabled:opacity-70">
+            <button type="submit" disabled={isSubmitting} className="w-full py-4 mt-6 bg-primary text-white font-bold rounded-xl hover:bg-primary/85 transition h-14 active:scale-[0.98] disabled:opacity-70">
               {isSubmitting ? "Deploying..." : "Initialize Session"}
             </button>
           </form>
         </div>
 
-        <div className="xl:col-span-2 bg-white rounded-3xl shadow-sm border border-[#E4D4CC] overflow-hidden anim-item">
-          <div className="p-6 border-b border-[#E4D4CC] bg-[#F4EFEA]/30">
-            <h3 className="text-xl font-bold text-[#4A3131]">Scheduled Examinations</h3>
+        <div className="xl:col-span-2 bg-white rounded-3xl shadow-sm border border-accent overflow-hidden anim-item">
+          <div className="p-6 border-b border-accent bg-accent/30">
+            <h3 className="text-xl font-bold text-primary">Scheduled Examinations</h3>
           </div>
           <div className="overflow-x-auto">
             {initialExams.length === 0 ? (
-              <p className="text-[#5D6065] text-center p-8 font-medium">No exams deployed yet.</p>
+              <p className="text-secondary text-center p-8 font-medium">No exams deployed yet.</p>
             ) : (
-              <table className="w-full text-left text-sm text-[#5D6065]">
-                <thead className="bg-[#F4EFEA] text-xs uppercase font-bold text-[#4A3131]">
+              <table className="w-full text-left text-sm text-secondary">
+                <thead className="bg-accent text-xs uppercase font-bold text-primary">
                   <tr>
                     <th className="px-6 py-4">Linked Course</th>
                     <th className="px-6 py-4">Exam Title</th>
@@ -106,17 +106,17 @@ export function ExamsClient({ courses, initialExams }: { courses: Course[], init
                     <th className="px-6 py-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E4D4CC]">
+                <tbody className="divide-y divide-accent">
                   {initialExams.map(e => (
-                    <tr key={e.id} className="hover:bg-[#F4EFEA]/20 transition group">
-                      <td className="px-6 py-4 font-mono font-bold tracking-wide text-[#4A3131]">{e.course.code}</td>
-                      <td className="px-6 py-4 font-bold text-[#4A3131]">{e.title}</td>
+                    <tr key={e.id} className="hover:bg-accent/20 transition group">
+                      <td className="px-6 py-4 font-mono font-bold tracking-wide text-primary">{e.course.code}</td>
+                      <td className="px-6 py-4 font-bold text-primary">{e.title}</td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-1.5 text-xs font-bold text-[#5D6065] mb-1">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-secondary mb-1">
                           <Calendar className="w-3.5 h-3.5" />
                           {new Date(e.scheduledDate).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
                         </div>
-                        <div className="flex items-center gap-1.5 text-xs font-medium text-[#5D6065]">
+                        <div className="flex items-center gap-1.5 text-xs font-medium text-secondary">
                           <Clock className="w-3.5 h-3.5" />
                           {e.duration} Mins
                         </div>
@@ -128,19 +128,19 @@ export function ExamsClient({ courses, initialExams }: { courses: Course[], init
                         <div className="flex items-center justify-end gap-2">
                           <Link
                             href={`/lecturer/exams/${e.id}/questions`}
-                            className="text-xs font-bold px-2 py-1 rounded-lg border border-[#D9C9BC] text-[#4A3131] hover:bg-[#F4EFEA]"
+                            className="text-xs font-bold px-2 py-1 rounded-lg border border-accent text-primary hover:bg-accent"
                           >
                             Questions
                           </Link>
                           <Link
                             href={`/lecturer/exams/${e.id}/results`}
-                            className="text-xs font-bold px-2 py-1 rounded-lg border border-[#D9C9BC] text-[#4A3131] hover:bg-[#F4EFEA]"
+                            className="text-xs font-bold px-2 py-1 rounded-lg border border-accent text-primary hover:bg-accent"
                           >
                             Results
                           </Link>
                           <Link
                             href={`/lecturer/exams/${e.id}/monitor`}
-                            className="text-xs font-bold px-2 py-1 rounded-lg border border-[#D9C9BC] text-[#4A3131] hover:bg-[#F4EFEA]"
+                            className="text-xs font-bold px-2 py-1 rounded-lg border border-accent text-primary hover:bg-accent"
                           >
                             Live Monitor
                           </Link>
@@ -151,12 +151,12 @@ export function ExamsClient({ courses, initialExams }: { courses: Course[], init
                             </button>
                           )}
                           {e.status === 'ACTIVE' && (
-                            <button onClick={() => setStatus(e.id, 'COMPLETED')} className="text-[#4A3131] hover:text-[#5a3f3f] p-2 rounded-lg hover:bg-[#E4D4CC]/40 transition" title="Complete Exam">
+                            <button onClick={() => setStatus(e.id, 'COMPLETED')} className="text-primary hover:text-primary/85 p-2 rounded-lg hover:bg-accent/40 transition" title="Complete Exam">
                               <CheckCircle2 className="w-5 h-5" />
                             </button>
                           )}
                           {e.status === 'COMPLETED' && (
-                            <span className="text-xs font-medium text-[#5D6065] italic mr-2">Locked</span>
+                            <span className="text-xs font-medium text-secondary italic mr-2">Locked</span>
                           )}
                         </div>
                       </td>

@@ -22,14 +22,14 @@ export function LecturerNavbar({ name, staffId }: Props) {
   const pathname = usePathname();
 
   return (
-    <header className="h-20 bg-white border-b border-[#E4D4CC] flex items-center justify-between px-10 shadow-sm z-10 shrink-0">
+    <header className="h-20 bg-white border-b border-accent flex items-center justify-between px-10 shadow-sm z-10 shrink-0">
       {/* Left: Branding & Identity */}
       <div className="flex items-center gap-6">
-        <h1 className="text-2xl font-black text-[#4A3131] tracking-tight">OpenCBT</h1>
-        <div className="h-8 w-px bg-[#E4D4CC]"></div>
+        <h1 className="text-2xl font-black text-primary tracking-tight">OpenCBT</h1>
+        <div className="h-8 w-px bg-accent"></div>
         <div className="flex flex-col">
-          <span className="text-xs font-bold text-[#5D6065] uppercase tracking-widest">Lecturer Portal</span>
-          <span className="text-lg font-black text-[#4A3131] leading-tight">Welcome, {name}</span>
+          <span className="text-xs font-bold text-secondary uppercase tracking-widest">Lecturer Portal</span>
+          <span className="text-lg font-black text-primary leading-tight">Welcome, {name}</span>
         </div>
       </div>
 
@@ -42,8 +42,8 @@ export function LecturerNavbar({ name, staffId }: Props) {
               key={href}
               href={href}
               className={`px-4 py-2.5 rounded-xl transition duration-300 font-bold flex items-center gap-2 ${isActive
-                  ? "bg-[#4A3131] text-white shadow-md shadow-[#4A3131]/20"
-                  : "text-[#5D6065] hover:bg-[#E4D4CC]/50 hover:text-[#4A3131]"
+                  ? "bg-primary text-white shadow-md shadow-primary/20"
+                  : "text-secondary hover:bg-accent/50 hover:text-primary"
                 }`}
             >
               {icon}
@@ -55,13 +55,13 @@ export function LecturerNavbar({ name, staffId }: Props) {
 
       {/* Right: Staff ID badge + Logout */}
       <div className="flex items-center gap-4">
-        <div className="px-3 py-1.5 bg-[#F4EFEA] border border-[#E4D4CC] rounded-lg">
-          <span className="text-xs font-bold text-[#5D6065] uppercase tracking-widest">Staff ID</span>
-          <p className="font-mono font-black text-[#4A3131] text-sm leading-tight">{staffId}</p>
+        <div className="px-3 py-1.5 bg-accent border border-accent rounded-lg">
+          <span className="text-xs font-bold text-secondary uppercase tracking-widest">Staff ID</span>
+          <p className="font-mono font-black text-primary text-sm leading-tight">{staffId}</p>
         </div>
 
         <LogoutButton
-          className="px-5 py-2.5 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition-all shadow-[#4A3131]/20 shadow-md flex items-center gap-2 group"
+          className="px-5 py-2.5 bg-primary text-white font-bold rounded-xl hover:bg-primary/85 transition-all shadow-primary/20 shadow-md flex items-center gap-2 group"
           iconClassName="w-4 h-4 group-hover:-translate-x-1 transition-transform"
         />
       </div>
