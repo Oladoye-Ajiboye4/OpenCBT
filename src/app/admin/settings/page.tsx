@@ -1,8 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { SettingsClient } from "./SettingsClient";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function SettingsPage() {
-  const profileRecord = await prisma.institution.findUnique({ where: { id: "global" } });
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  const profileRecord = user ? await prisma.institution.findUnique({ where: { adminId: user.id } }) : null;
   
   const faculties = await prisma.faculty.findMany({
     include: {

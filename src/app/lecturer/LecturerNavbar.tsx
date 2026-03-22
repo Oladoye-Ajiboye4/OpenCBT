@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, BookOpen, FileText, Key, ShieldAlert, LogOut } from "lucide-react";
-import { logout } from "@/actions/auth";
+import { LayoutDashboard, BookOpen, FileText, Key, ShieldAlert } from "lucide-react";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 
 const navLinks = [
   { href: "/lecturer", label: "Overview", icon: <LayoutDashboard className="w-5 h-5" />, exact: true },
   { href: "/lecturer/courses", label: "Assigned Courses", icon: <BookOpen className="w-5 h-5" /> },
   { href: "/lecturer/exams", label: "Exams", icon: <FileText className="w-5 h-5" /> },
-  { href: "/lecturer/provision", label: "Kiosk Provisioner", icon: <Key className="w-5 h-5" /> },
+  { href: "/lecturer/provision", label: "Enrollment & Provisioning", icon: <Key className="w-5 h-5" /> },
   { href: "/lecturer/results", label: "Student Results", icon: <ShieldAlert className="w-5 h-5" /> },
 ];
 
@@ -23,10 +23,14 @@ export function LecturerNavbar({ name, staffId }: Props) {
 
   return (
     <header className="h-20 bg-white border-b border-[#E4D4CC] flex items-center justify-between px-10 shadow-sm z-10 shrink-0">
-      {/* Left: Identity */}
-      <div className="flex flex-col">
-        <span className="text-xs font-bold text-[#5D6065] uppercase tracking-widest">Lecturer Portal</span>
-        <span className="text-lg font-black text-[#4A3131] leading-tight">Welcome, {name}</span>
+      {/* Left: Branding & Identity */}
+      <div className="flex items-center gap-6">
+        <h1 className="text-2xl font-black text-[#4A3131] tracking-tight">OpenCBT</h1>
+        <div className="h-8 w-px bg-[#E4D4CC]"></div>
+        <div className="flex flex-col">
+          <span className="text-xs font-bold text-[#5D6065] uppercase tracking-widest">Lecturer Portal</span>
+          <span className="text-lg font-black text-[#4A3131] leading-tight">Welcome, {name}</span>
+        </div>
       </div>
 
       {/* Center: Nav Links */}
@@ -57,15 +61,10 @@ export function LecturerNavbar({ name, staffId }: Props) {
           <p className="font-mono font-black text-[#4A3131] text-sm leading-tight">{staffId}</p>
         </div>
 
-        <form action={logout}>
-          <button
-            type="submit"
-            className="px-5 py-2.5 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition-all shadow-[#4A3131]/20 shadow-md flex items-center gap-2 group"
-          >
-            <LogOut className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Logout
-          </button>
-        </form>
+        <LogoutButton 
+          className="px-5 py-2.5 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition-all shadow-[#4A3131]/20 shadow-md flex items-center gap-2 group"
+          iconClassName="w-4 h-4 group-hover:-translate-x-1 transition-transform"
+        />
       </div>
     </header>
   );

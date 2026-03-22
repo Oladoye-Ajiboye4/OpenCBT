@@ -3,7 +3,7 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef } from "react";
-import { Users, UserCheck, BookOpen } from "lucide-react";
+import { Users, UserCheck, BookOpen, AlertCircle } from "lucide-react";
 
 gsap.registerPlugin(useGSAP);
 
@@ -13,9 +13,11 @@ interface AdminOverviewClientProps {
     activeFaculty: number;
     provisionedCourses: number;
   };
+  dbError?: boolean;
+  institutionName: string;
 }
 
-export function AdminOverviewClient({ stats }: AdminOverviewClientProps) {
+export function AdminOverviewClient({ stats, dbError, institutionName }: AdminOverviewClientProps) {
   const container = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
@@ -31,9 +33,16 @@ export function AdminOverviewClient({ stats }: AdminOverviewClientProps) {
   return (
     <div ref={container} className="max-w-6xl mx-auto space-y-8 font-sans">
       <div>
-        <h1 className="text-4xl font-black text-[#4A3131] tracking-tight">Admin Overview</h1>
+        <h1 className="text-4xl font-black text-[#4A3131] tracking-tight">Welcome to {institutionName} Admin Portal</h1>
         <p className="text-[#5D6065] text-lg mt-2 font-medium">Monitor your institutional performance and active deployments natively.</p>
       </div>
+
+      {dbError && (
+        <div className="metric-card bg-red-50 border border-red-200 text-red-700 p-4 rounded-2xl flex items-center gap-3">
+          <AlertCircle className="w-6 h-6 flex-shrink-0" />
+          <p className="text-sm font-bold">Network error: Unable to load live metrics. Displaying default values.</p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="metric-card bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] flex flex-col items-center text-center">

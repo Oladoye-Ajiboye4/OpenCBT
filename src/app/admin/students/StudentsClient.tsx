@@ -213,6 +213,10 @@ export function StudentsClient({ faculties, matricMode }: { faculties: Faculty[]
                 className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none transition text-[#4A3131] font-medium disabled:bg-[#F4EFEA] disabled:text-[#5D6065]/60" 
               />
             </div>
+            <div>
+              <label className="block text-sm font-bold text-[#5D6065] mb-2">Student Email Address</label>
+              <input type="email" name="email" required placeholder="student@institute.edu" className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none text-[#4A3131] font-medium" />
+            </div>
             
             <div>
               <label className="block text-sm font-bold text-[#5D6065] mb-2">Faculty</label>

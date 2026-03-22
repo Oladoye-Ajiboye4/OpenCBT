@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { createClient } from "@/utils/supabase/server";
 
 export async function createFaculty(data: FormData) {
   const name = data.get("name") as string;
@@ -67,12 +68,11 @@ export async function deleteDepartment(id: string) {
 
 export async function getInstitutionProfile() {
   try {
-    let profile = await prisma.institution.findUnique({ where: { id: "global" } });
-    if (!profile) {
-      profile = await prisma.institution.create({
-        data: { id: "global", name: "Institution Name", ictEmail: "admin@institution.edu" }
-      });
-    }
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { error: "Not logged in" };
+
+    const profile = await prisma.institution.findUnique({ where: { adminId: user.id } });
     return { profile };
   } catch (error) {
     return { error: "Failed to fetch Institution Profile" };
@@ -80,17 +80,22 @@ export async function getInstitutionProfile() {
 }
 
 export async function updateInstitutionProfile(data: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "Not logged in" };
+
   const name = data.get("name") as string;
   const ictEmail = data.get("ictEmail") as string;
   const matricMode = data.get("matricMode") as string || "MANUAL";
+  const currentAcademicYear = data.get("currentAcademicYear") as string || undefined;
+  const currentTerm = data.get("currentTerm") as string || undefined;
 
   if (!name || !ictEmail) return { error: "All fields are required" };
 
   try {
-    await prisma.institution.upsert({
-      where: { id: "global" },
-      update: { name, ictEmail, matricMode },
-      create: { id: "global", name, ictEmail, matricMode }
+    await prisma.institution.update({
+      where: { adminId: user.id },
+      data: { name, ictEmail, matricMode, currentAcademicYear, currentTerm }
     });
     revalidatePath("/admin/settings");
     return { success: true };

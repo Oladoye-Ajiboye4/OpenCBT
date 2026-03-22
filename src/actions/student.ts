@@ -3,19 +3,38 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
-export async function createStudent(data: FormData) {
-  const firstName = data.get("firstName") as string;
-  const lastName = data.get("lastName") as string;
-  let matricNumber = data.get("matricNumber") as string;
-  const departmentId = data.get("departmentId") as string;
-  const level = data.get("level") as string;
+import { z } from "zod";
 
-  if (!firstName || !lastName || !departmentId || !level) {
-    return { error: "Required fields missing" };
+const createStudentSchema = z.object({
+  firstName: z.string().min(1, "First Name is required"),
+  lastName: z.string().min(1, "Last Name is required"),
+  email: z.string().email("Invalid email address"),
+  departmentId: z.string().min(1, "Department is required"),
+  level: z.string().min(1, "Level is required"),
+});
+
+export async function createStudent(data: FormData) {
+  const parsed = createStudentSchema.safeParse({
+    firstName: data.get("firstName"),
+    lastName: data.get("lastName"),
+    email: data.get("email"),
+    departmentId: data.get("departmentId"),
+    level: data.get("level"),
+  });
+
+  if (!parsed.success) {
+    return { error: parsed.error.errors[0].message };
   }
 
+  const { firstName, lastName, email, departmentId, level } = parsed.data;
+  let matricNumber = data.get("matricNumber") as string;
+
   try {
-    const institution = await prisma.institution.findUnique({ where: { id: "global" } });
+    // Note: Assuming Admin ID or Global ID based on new schema fixes, we should fetch institution robustly
+    const user = await prisma.user.findFirst({ where: { role: "ADMIN" } });
+    if (!user) throw new Error("No Admin found for system parameters");
+    
+    const institution = await prisma.institution.findUnique({ where: { adminId: user.id } }) || await prisma.institution.findFirst();
     
     if (institution?.matricMode === "AUTO") {
       const year = new Date().getFullYear();
@@ -24,24 +43,25 @@ export async function createStudent(data: FormData) {
       
       await prisma.$transaction([
         prisma.student.create({
-          data: { firstName, lastName, matricNumber, departmentId, level },
+          data: { firstName, lastName, email, matricNumber, departmentId, level, id: Date.now().toString() }, // Ensure dummy ID or let Supabase auth insert ID. For admin inserts, if no auth is hooked, we need a unique ID.
         }),
         prisma.institution.update({
-          where: { id: "global" },
+          where: { id: institution.id },
           data: { matricSerialTracker: nextSerial }
         })
       ]);
     } else {
       if (!matricNumber) return { error: "Matric Number is required in Manual Mode" };
       await prisma.student.create({
-        data: { firstName, lastName, matricNumber, departmentId, level },
+        data: { firstName, lastName, email, matricNumber, departmentId, level, id: Date.now().toString() },
       });
     }
 
     revalidatePath("/admin/students");
     return { success: true };
   } catch (error: any) {
-    if (error.code === 'P2002') return { error: "Student with this Matric Number already exists" };
+    console.error("Student Creation Error:", error);
+    if (error.code === 'P2002') return { error: "Student with this Matric Number or Email already exists" };
     return { error: "Failed to create Student" };
   }
 }

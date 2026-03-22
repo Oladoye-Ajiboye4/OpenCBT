@@ -21,8 +21,7 @@ export default async function LecturerOverview() {
     prisma.exam.count({
       where: {
         course: { lecturerId: lecturer.id },
-        startTime: { lte: new Date() },
-        endTime: { gte: new Date() },
+        status: "ACTIVE"
       }
     }),
   ]);

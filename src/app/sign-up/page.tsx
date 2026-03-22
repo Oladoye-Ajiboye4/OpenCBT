@@ -29,14 +29,16 @@ export default function SignUpPage() {
     setFieldErrors({});
 
     const formData = new FormData(e.currentTarget);
+    const institutionName = formData.get("institutionName") as string;
+    const institutionType = formData.get("institutionType") as string;
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const confirmPassword = formData.get("confirmPassword") as string;
 
-    const validation = signUpSchema.safeParse({ email, password, confirmPassword });
+    const validation = signUpSchema.safeParse({ institutionName, institutionType, email, password, confirmPassword });
     if (!validation.success) {
       const formattedErrors: Record<string, string> = {};
-      validation.error.errors.forEach((err: any) => {
+      validation.error.issues.forEach((err: any) => {
         if (err.path[0]) formattedErrors[err.path[0].toString()] = err.message;
       });
       setFieldErrors(formattedErrors);
@@ -78,6 +80,19 @@ export default function SignUpPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-bold text-[#5D6065] mb-2" htmlFor="institutionName">Institution Name</label>
+            <input id="institutionName" name="institutionName" type="text" required disabled={isSubmitting} className={`w-full p-3.5 border-2 ${fieldErrors.institutionName ? 'border-red-400' : 'border-[#E4D4CC]'} rounded-xl focus:outline-none focus:border-[#4A3131] transition text-[#4A3131] font-medium disabled:opacity-60`} />
+            {fieldErrors.institutionName && <p className="text-red-500 text-xs mt-1.5 font-bold">{fieldErrors.institutionName}</p>}
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-[#5D6065] mb-2" htmlFor="institutionType">Institution Type</label>
+            <select id="institutionType" name="institutionType" required disabled={isSubmitting} className={`w-full p-3.5 border-2 ${fieldErrors.institutionType ? 'border-red-400' : 'border-[#E4D4CC]'} rounded-xl focus:outline-none focus:border-[#4A3131] transition text-[#4A3131] font-medium disabled:opacity-60 bg-white`}>
+              <option value="UNIVERSITY">University</option>
+              <option value="SECONDARY">Secondary School</option>
+            </select>
+            {fieldErrors.institutionType && <p className="text-red-500 text-xs mt-1.5 font-bold">{fieldErrors.institutionType}</p>}
+          </div>
           <div>
             <label className="block text-sm font-bold text-[#5D6065] mb-2" htmlFor="email">Institute Email</label>
             <input id="email" name="email" type="email" required disabled={isSubmitting} className="w-full p-3.5 border-2 border-[#E4D4CC] rounded-xl focus:outline-none focus:border-[#4A3131] transition text-[#4A3131] font-medium disabled:opacity-60" />

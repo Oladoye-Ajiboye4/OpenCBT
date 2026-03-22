@@ -9,12 +9,17 @@ datasource db {
 }
 
 model Institution {
-  id                  String   @id @default("global")
+  id                  String   @id @default(cuid())
   name                String
   ictEmail            String
-  updatedAt           DateTime @updatedAt
   matricMode          String   @default("MANUAL")
   matricSerialTracker Int      @default(0)
+  adminId             String   @unique
+  admin               User     @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  updatedAt           DateTime @updatedAt
+  institutionType     String   @default("UNIVERSITY")
+  currentAcademicYear String?
+  currentTerm         String?
 }
 
 model User {
@@ -29,6 +34,7 @@ model User {
   createdCourses  Course[]    @relation("CourseAdmin")
   assignedCourses Course[]    @relation("CourseLecturer")
   department      Department? @relation(fields: [departmentId], references: [id])
+  institution     Institution?
 }
 
 model Faculty {
@@ -52,6 +58,7 @@ model Student {
   matricNumber String       @unique
   firstName    String
   lastName     String
+  email        String
   level        String
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
@@ -90,15 +97,16 @@ model Enrollment {
 }
 
 model Exam {
-  id          String       @id @default(uuid())
-  courseId    String
-  title       String
-  startTime   DateTime
-  endTime     DateTime
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  course      Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  proctorLogs ProctorLog[]
+  id            String       @id @default(uuid())
+  courseId      String
+  title         String
+  duration      Int
+  scheduledDate DateTime
+  status        String       @default("UPCOMING")
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  course        Course       @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  proctorLogs   ProctorLog[]
 }
 
 model ProctorLog {

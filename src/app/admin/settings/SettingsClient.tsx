@@ -3,14 +3,14 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef, useState } from "react";
-import { Building2, Layers, Trash2, ShieldCheck, Loader2, KeyRound } from "lucide-react";
+import { Building2, Layers, Trash2, ShieldCheck, Loader2, KeyRound, BookOpen } from "lucide-react";
 import { createFaculty, deleteFaculty, createDepartment, deleteDepartment, updateInstitutionProfile } from "@/actions/institution";
 import { resetPasswordForEmail } from "@/actions/auth";
 import toast from "react-hot-toast";
 
 type Faculty = { id: string; name: string };
 type Department = { id: string; name: string; facultyId: string; faculty: Faculty };
-type Profile = { id: string; name: string; ictEmail: string; matricMode: string } | null;
+type Profile = { id: string; name: string; ictEmail: string; matricMode: string; currentAcademicYear?: string | null; currentTerm?: string | null } | null;
 
 interface SettingsClientProps {
   initialFaculties: Faculty[];
@@ -158,6 +158,31 @@ export function SettingsClient({ initialFaculties, initialDepartments, initialPr
           </div>
           <button type="submit" disabled={isSubmittingProfile} className="px-8 py-3 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition active:scale-[0.98] disabled:opacity-70 flex items-center gap-2">
             {isSubmittingProfile ? <><Loader2 className="w-5 h-5 animate-spin"/> Saving...</> : "Save Profile"}
+          </button>
+        </form>
+      </div>
+
+      {/* Academic Calendar */}
+      <div className="bg-white p-8 rounded-3xl shadow-sm border border-[#E4D4CC] anim-item h-max">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-[#F4EFEA] rounded-lg flex items-center justify-center border border-[#E4D4CC]">
+            <BookOpen className="w-5 h-5 text-[#4A3131]" />
+          </div>
+          <h2 className="text-xl font-bold text-[#4A3131]">Academic Calendar</h2>
+        </div>
+        <form onSubmit={handleUpdateProfile}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-bold text-[#5D6065] mb-2">Current Academic Year</label>
+              <input name="currentAcademicYear" defaultValue={initialProfile?.currentAcademicYear || ""} placeholder="e.g. 2025/2026" className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none transition text-[#4A3131] font-medium" />
+            </div>
+            <div>
+              <label className="block text-sm font-bold text-[#5D6065] mb-2">Current Term/Semester</label>
+              <input name="currentTerm" defaultValue={initialProfile?.currentTerm || ""} placeholder="e.g. First Semester" className="w-full p-3 border-2 border-[#E4D4CC] rounded-xl focus:border-[#4A3131] outline-none transition text-[#4A3131] font-medium" />
+            </div>
+          </div>
+          <button type="submit" disabled={isSubmittingProfile} className="px-8 py-3 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition active:scale-[0.98] disabled:opacity-70 flex items-center gap-2">
+            {isSubmittingProfile ? <><Loader2 className="w-5 h-5 animate-spin"/> Saving...</> : "Update Calendar"}
           </button>
         </form>
       </div>

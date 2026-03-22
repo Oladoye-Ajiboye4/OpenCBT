@@ -76,6 +76,9 @@ export default function SignInPage() {
           <div>
             <label className="block text-sm font-bold text-[#5D6065] mb-2" htmlFor="password">Password</label>
             <input id="password" name="password" type="password" required disabled={isSubmitting} className="w-full p-4 border-2 border-[#E4D4CC] rounded-xl focus:outline-none focus:border-[#4A3131] transition text-[#4A3131] font-medium disabled:opacity-60" />
+            <div className="mt-2 text-right">
+              <Link href="/forgot-password" className="text-sm text-[#4A3131] font-bold hover:underline">Forgot Password?</Link>
+            </div>
           </div>
 
           <button type="submit" disabled={isSubmitting} className="w-full py-4 mt-6 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] hover:-translate-y-0.5 transition-all shadow-md active:scale-[0.98] disabled:opacity-80 disabled:pointer-events-none flex justify-center items-center h-14">

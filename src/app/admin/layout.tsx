@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { LayoutDashboard, Users, UserCheck, BookOpen, Settings, LogOut } from "lucide-react";
-import { logout } from "@/actions/auth";
+import { LayoutDashboard, Users, UserCheck, BookOpen, Settings } from "lucide-react";
+import { LogoutButton } from "@/components/auth/LogoutButton";
 import { headers } from "next/headers";
 
 export default async function AdminLayout({
@@ -23,7 +23,10 @@ export default async function AdminLayout({
     <div className="min-h-screen bg-[#F4EFEA] text-[#5D6065] flex font-sans">
       {/* Sidebar */}
       <aside className="w-64 bg-white border-r border-[#E4D4CC] flex flex-col items-center py-8 shadow-sm shrink-0">
-        <h2 className="text-2xl font-black mb-10 text-[#4A3131]">Admin Panel</h2>
+        <div className="w-full px-6 mb-10 text-center">
+          <h1 className="text-3xl font-black text-[#4A3131] tracking-tight">OpenCBT</h1>
+          <p className="text-xs font-bold text-[#5D6065] uppercase tracking-widest mt-1">Admin Panel</p>
+        </div>
         <nav className="flex flex-col gap-3 w-full px-6">
           {navLinks.map(({ href, label, icon, exact }) => {
             const isActive = exact ? pathname === href : pathname.startsWith(href);
@@ -45,15 +48,10 @@ export default async function AdminLayout({
         </nav>
 
         <div className="mt-auto w-full px-6 pt-10 pb-4">
-          <form action={logout} className="w-full">
-            <button
-              type="submit"
-              className="flex items-center justify-center gap-3 w-full p-3.5 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition-all shadow-md shadow-[#4A3131]/20 group"
-            >
-              <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-              Logout
-            </button>
-          </form>
+          <LogoutButton 
+            className="flex items-center justify-center gap-3 w-full p-3.5 bg-[#4A3131] text-white font-bold rounded-xl hover:bg-[#5a3f3f] transition-all shadow-md shadow-[#4A3131]/20 group"
+            iconClassName="w-5 h-5 group-hover:-translate-x-1 transition-transform"
+          />
         </div>
       </aside>
 
