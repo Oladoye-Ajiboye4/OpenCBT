@@ -37,7 +37,7 @@ export function SettingsClient({ initialFaculties, initialDepartments, initialPr
     try {
       const res = await updateInstitutionProfile(formData);
       if (res?.error) toast.error(res.error);
-      else toast.success("Institution Profile updated!");
+      else toast.success(res?.message || "Institution Profile updated!");
     } catch {
       toast.error("Network error. Please check your connection and try again.");
     } finally {
@@ -72,7 +72,7 @@ export function SettingsClient({ initialFaculties, initialDepartments, initialPr
       const res = await createFaculty(formData);
       if (res?.error) toast.error(res.error);
       else {
-        toast.success("Faculty added successfully!");
+        toast.success(res?.message || "Faculty added successfully!");
         form.reset();
       }
     } catch {
@@ -91,7 +91,7 @@ export function SettingsClient({ initialFaculties, initialDepartments, initialPr
       const res = await createDepartment(formData);
       if (res?.error) toast.error(res.error);
       else {
-        toast.success("Department added successfully!");
+        toast.success(res?.message || "Department added successfully!");
         form.reset();
       }
     } catch {
@@ -106,7 +106,7 @@ export function SettingsClient({ initialFaculties, initialDepartments, initialPr
     try {
       const res = await deleteFaculty(id);
       if (res?.error) toast.error(res.error);
-      else toast.success("Faculty deleted successfully!");
+      else toast.success(res?.message || "Faculty deleted successfully!");
     } catch {
       toast.error("Network error. Please try again.");
     }
@@ -117,7 +117,7 @@ export function SettingsClient({ initialFaculties, initialDepartments, initialPr
     try {
       const res = await deleteDepartment(id);
       if (res?.error) toast.error(res.error);
-      else toast.success("Department deleted successfully!");
+      else toast.success(res?.message || "Department deleted successfully!");
     } catch {
       toast.error("Network error. Please try again.");
     }

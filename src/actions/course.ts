@@ -79,7 +79,7 @@ export async function createCourse(data: {
     });
 
     if (!parsed.success) {
-      return { error: parsed.error.issues[0].message }; 
+      return { success: false, error: parsed.error.issues[0].message || "Validation failed" }; 
     }
 
     const payload = parsed.data;
@@ -93,7 +93,7 @@ export async function createCourse(data: {
 
     // If both digits were found and they don't match
     if (codeFirstDigit && levelFirstDigit && codeFirstDigit !== levelFirstDigit) {
-       return { error: `Level mismatch: A ${codeFirstDigit}00-level course cannot be assigned to ${payload.level}.` };
+       return { success: false, error: `Level mismatch: A ${codeFirstDigit}00-level course cannot be assigned to ${payload.level}.` };
     }
 
     const existing = await prisma.course.findUnique({
@@ -101,7 +101,7 @@ export async function createCourse(data: {
     });
 
     if (existing) {
-      return { error: "Course Code already exists." };
+      return { success: false, error: "Course Code already exists." };
     }
 
     await prisma.course.create({
@@ -116,12 +116,13 @@ export async function createCourse(data: {
 
     revalidatePath("/admin/courses");
     return { success: true, message: "Course created successfully!" };
-  } catch (error: any) {
-    if (error?.code === 'P2002') {
-       return { error: "Course Code already exists." };
+  } catch (error: unknown) {
+    const err = error as Record<string, unknown>;
+    if (err?.code === 'P2002') {
+       return { success: false, error: "Course Code already exists." };
     }
     console.error("Failed to create course:", error);
-    return { error: "An unexpected database error occurred. Please try again." };
+    return { success: false, error: "An unexpected database error occurred. Please try again." };
   }
 }
 
@@ -161,12 +162,13 @@ export async function bulkUploadCourses(data: {
 
     revalidatePath("/admin/courses");
     return { success: true, message: "Bulk upload successful!" };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Bulk upload error:", error);
-    if (error.code === 'P2002') {
-      return { success: false, message: "Upload failed: Duplicate Course Code detected." };
+    const err = error as Record<string, unknown>;
+    if (err.code === 'P2002') {
+      return { success: false, error: "Upload failed: Duplicate Course Code detected." };
     }
-    return { success: false, message: "An error occurred during bulk upload." };
+    return { success: false, error: "An error occurred during bulk upload." };
   }
 }
 
@@ -179,6 +181,6 @@ export async function deleteCourse(courseId: string) {
     return { success: true, message: "Course deleted successfully!" };
   } catch (error) {
     console.error("Failed to delete course:", error);
-    return { success: false, message: "An error occurred while deleting." };
+    return { success: false, error: "An error occurred while deleting." };
   }
 }

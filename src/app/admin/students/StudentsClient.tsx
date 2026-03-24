@@ -68,10 +68,10 @@ export function StudentsClient({ faculties, matricMode }: { faculties: Faculty[]
       const res = await createStudent(formData);
       if (res?.error) toast.error(res.error);
       else {
-        toast.success("Student created successfully!");
+        toast.success(res?.message || "Student created successfully!");
         form.reset();
         setCreateFacId("");
-        if (filterDeptId && filterLevel) handleFilter(); // refresh table
+        if (filterDeptId && filterLevel) handleFilter();
       }
     } catch {
       toast.error("Network error. Please check your connection and try again.");
@@ -86,7 +86,7 @@ export function StudentsClient({ faculties, matricMode }: { faculties: Faculty[]
       const res = await deleteStudent(id);
       if (res?.error) toast.error(res.error);
       else {
-        toast.success("Student deleted successfully.");
+        toast.success(res?.message || "Student deleted successfully.");
         setStudents(prev => prev.filter(s => s.id !== id));
       }
     } catch {
@@ -101,7 +101,7 @@ export function StudentsClient({ faculties, matricMode }: { faculties: Faculty[]
       const res = await updateStudent(id, formData);
       if (res?.error) toast.error(res.error);
       else {
-        toast.success("Student updated successfully!");
+        toast.success(res?.message || "Student updated successfully!");
         setEditingId(null);
         handleFilter();
       }
@@ -122,10 +122,10 @@ export function StudentsClient({ faculties, matricMode }: { faculties: Faculty[]
       complete: async (results) => {
         try {
           const data = results.data;
-          const res = await uploadStudentsCSV(data, csvDeptId, csvLevel);
+          const res = await uploadStudentsCSV(data as Record<string, unknown>[], csvDeptId, csvLevel);
           if (res?.error) toast.error(res.error);
           else {
-            toast.success("CSV Uploaded successfully!");
+            toast.success(res?.message || "CSV Uploaded successfully!");
             setShowCSVModal(false);
             if (filterDeptId === csvDeptId && filterLevel === csvLevel) handleFilter();
           }

@@ -16,13 +16,35 @@ import {
 import { LecturerCombobox } from "@/components/admin/LecturerCombobox";
 import { BulkCourseUpload } from "@/components/admin/BulkCourseUpload";
 
+interface Faculty {
+  id: string;
+  name: string;
+}
+
+interface Department {
+  id: string;
+  name: string;
+  facultyId: string;
+}
+
+interface Course {
+  id: string;
+  code: string;
+  title: string;
+  level: string;
+  departmentId: string;
+  lecturerId: string | null;
+  lecturer?: { id: string; email: string; staffId: string | null; role: string; createdAt?: Date; updatedAt?: Date; departmentId?: string | null; name?: string | null } | null;
+  department?: Department;
+}
+
 export default function ManageCourses() {
   const container = useRef<HTMLDivElement>(null);
 
   // Filters
-  const [faculties, setFaculties] = useState<any[]>([]);
-  const [departments, setDepartments] = useState<any[]>([]);
-  const [courses, setCourses] = useState<any[]>([]);
+  const [faculties, setFaculties] = useState<Faculty[]>([]);
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   
   const [selectedFaculty, setSelectedFaculty] = useState("");
   const [selectedDept, setSelectedDept] = useState("");
@@ -109,7 +131,7 @@ export default function ManageCourses() {
     if (res.error) {
       toast.error(res.error);
     } else {
-      toast.success(res.message);
+      toast.success(res.message || "Course created successfully!");
       form.reset();
       fetchCourses();
     }
@@ -119,10 +141,10 @@ export default function ManageCourses() {
     if (!confirm("Are you sure you want to delete this course?")) return;
     const res = await deleteCourse(id);
     if (res.success) {
-      toast.success(res.message);
+      toast.success(res.message || "Course deleted successfully!");
       fetchCourses();
     } else {
-      toast.error(res.message);
+      toast.error(res.error || "Failed to delete course");
     }
   };
 

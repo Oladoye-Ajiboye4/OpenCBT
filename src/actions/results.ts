@@ -34,8 +34,7 @@ export async function publishResults(resultId: string) {
             return access;
         }
 
-        const prismaAny = prisma as any;
-        const result = (await prismaAny.result.findUnique({
+        const result = await prisma.result.findUnique({
             where: { id: resultId },
             include: {
                 student: {
@@ -56,23 +55,7 @@ export async function publishResults(resultId: string) {
                     },
                 },
             },
-        })) as {
-            id: string;
-            status: string;
-            score: number;
-            totalMarks: number;
-            student: {
-                firstName: string;
-                lastName: string;
-                email: string;
-            };
-            exam: {
-                title: string;
-                course: {
-                    code: string;
-                };
-            };
-        } | null;
+        });
 
         if (!result) {
             return { error: "Result not found." };
@@ -82,7 +65,7 @@ export async function publishResults(resultId: string) {
             return { error: "Only lecturer-approved results can be published." };
         }
 
-        await prismaAny.result.update({
+        await prisma.result.update({
             where: { id: resultId },
             data: { status: "PUBLISHED" },
         });
@@ -103,6 +86,6 @@ export async function publishResults(resultId: string) {
         return { success: true, message: "Result published and email dispatched successfully." };
     } catch (error) {
         console.error(error);
-        return { error: "An unexpected network error occurred." };
+        return { success: false, error: "An unexpected network error occurred." };
     }
 }

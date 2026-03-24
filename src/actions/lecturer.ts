@@ -26,7 +26,7 @@ export async function createLecturer(data: FormData) {
 
     const parsed = lecturerSchema.safeParse(rawData);
     if (!parsed.success) {
-      return { error: parsed.error.issues?.[0]?.message || "Validation failed" };
+      return { success: false, error: parsed.error.issues?.[0]?.message || "Validation failed" };
     }
 
     const { name, staffId, email, password, departmentId } = parsed.data;
@@ -46,15 +46,15 @@ export async function createLecturer(data: FormData) {
         password,
         email_confirm: true,
       });
-      if (authError) return { error: "Auth Error: " + authError.message };
+      if (authError) return { success: false, error: "Auth Error: " + authError.message };
       authUserId = authData.user.id;
     } else {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
       });
-      if (authError) return { error: "Auth Error: " + authError.message };
-      if (!authData.user) return { error: "Failed to create Auth User" };
+      if (authError) return { success: false, error: "Auth Error: " + authError.message };
+      if (!authData.user) return { success: false, error: "Failed to create Auth User" };
       authUserId = authData.user.id;
     }
 
@@ -72,10 +72,11 @@ export async function createLecturer(data: FormData) {
     await sendLecturerWelcomeEmail(email, name, staffId, password);
 
     revalidatePath("/admin/lecturers");
-    return { success: true };
-  } catch (error: any) {
-    if (error.code === 'P2002') return { error: "Lecturer with this Email or Staff ID already exists." };
-    return { error: error.message || "Failed to provision Lecturer" };
+    return { success: true, message: "Lecturer provisioned successfully!" };
+  } catch (error: unknown) {
+    const err = error as Record<string, unknown>;
+    if (err.code === 'P2002') return { success: false, error: "Lecturer with this Email or Staff ID already exists." };
+    return { success: false, error: (err as any)?.message || "Failed to provision Lecturer" };
   }
 }
 
@@ -83,9 +84,9 @@ export async function deleteLecturer(id: string) {
   try {
     await prisma.user.delete({ where: { id } });
     revalidatePath("/admin/lecturers");
-    return { success: true };
+    return { success: true, message: "Lecturer access revoked!" };
   } catch (error) {
-    return { error: "Failed to remove Lecturer" };
+    return { success: false, error: "Failed to remove Lecturer" };
   }
 }
 
@@ -96,25 +97,27 @@ export async function getLecturers({ departmentId }: { departmentId: string }) {
       include: { department: true },
       orderBy: { createdAt: 'desc' }
     });
-    return { lecturers };
+    return { success: true, lecturers };
   } catch (error) {
-    return { error: "Failed to fetch lecturers" };
+    return { success: false, error: "Failed to fetch Lecturers" };
   }
 }
 
-export async function uploadLecturersCSV(records: any[], departmentId: string) {
-  if (!departmentId || !records || records.length === 0) return { error: "Invalid data" };
+export async function uploadLecturersCSV(records: Array<Record<string, unknown>>, departmentId: string) {
+  if (!departmentId || !records || records.length === 0) return { success: false, error: "Invalid data" };
 
   try {
-    await prisma.$transaction(async (tx: any) => {
+    await prisma.$transaction(async (tx) => {
       for (const record of records) {
-        if (!record.email || !record.staffId) throw new Error("CSV missing required columns");
+        const email = record.email as string;
+        const staffId = record.staffId as string;
+        if (!email || !staffId) throw new Error("CSV missing required columns");
         const id = Date.now().toString() + Math.random().toString(36).substring(7);
         await tx.user.create({
           data: {
             id: `usr_${id}`,
-            email: record.email,
-            staffId: record.staffId,
+            email,
+            staffId,
             role: "LECTURER",
             departmentId
           }
@@ -122,10 +125,11 @@ export async function uploadLecturersCSV(records: any[], departmentId: string) {
       }
     });
     revalidatePath("/admin/lecturers");
-    return { success: true };
-  } catch (error: any) {
-    if (error.code === 'P2002') return { error: "Duplicate Email or Staff ID detected." };
-    return { error: error.message || "Failed to bulk upload lecturers" };
+    return { success: true, message: "CSV Uploaded successfully!" };
+  } catch (error: unknown) {
+    const err = error as Record<string, unknown>;
+    if (err.code === 'P2002') return { success: false, error: "Duplicate Email or Staff ID detected." };
+    return { success: false, error: (err as any)?.message || "Failed to bulk upload lecturers" };
   }
 }
 
@@ -133,14 +137,14 @@ export async function resendLecturerEmail(id: string) {
   try {
     const user = await prisma.user.findUnique({ where: { id } });
     if (!user || !user.email || !user.staffId) {
-      return { error: "Lecturer not found or missing required data." };
+      return { success: false, error: "Lecturer not found or missing required data." };
     }
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     
     if (!supabaseKey) {
-      return { error: "SUPABASE_SERVICE_ROLE_KEY is required to reset credentials." };
+      return { success: false, error: "SUPABASE_SERVICE_ROLE_KEY is required to reset credentials." };
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey, {
@@ -155,13 +159,14 @@ export async function resendLecturerEmail(id: string) {
       password: newPassword,
     });
 
-    if (authError) return { error: "Auth Error: " + authError.message };
+    if (authError) return { success: false, error: "Auth Error: " + authError.message };
 
     await sendLecturerWelcomeEmail(user.email, user.name || "Faculty Member", user.staffId, newPassword);
 
-    return { success: true };
-  } catch (error: any) {
-    return { error: error.message || "Failed to resend credentials" };
+    return { success: true, message: "Welcome email resent successfully!" };
+  } catch (error: unknown) {
+    const err = error as any;
+    return { success: false, error: err?.message || "Failed to resend credentials" };
   }
 }
 

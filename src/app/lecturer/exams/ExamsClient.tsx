@@ -27,7 +27,7 @@ export function ExamsClient({ courses, initialExams }: { courses: Course[], init
       const res = await createExam(fd);
       if (res?.error) toast.error(res.error);
       else {
-        toast.success("Exam deployed successfully");
+        toast.success(res?.message || "Exam deployed successfully");
         e.currentTarget.reset();
       }
     } catch {
@@ -41,7 +41,7 @@ export function ExamsClient({ courses, initialExams }: { courses: Course[], init
     toast.loading(`Updating status to ${status}...`, { id: "status" });
     const res = await updateExamStatus(id, status);
     if (res?.error) toast.error(res.error, { id: "status" });
-    else toast.success(`Exam Marked as ${status}`, { id: "status" });
+    else toast.success(res?.message || `Exam Marked as ${status}`, { id: "status" });
   };
 
   return (

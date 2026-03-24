@@ -10,7 +10,7 @@ export async function createExam(data: FormData) {
   const scheduledDateStr = data.get("scheduledDate") as string;
 
   if (!title || !courseId || isNaN(duration) || !scheduledDateStr) {
-    return { error: "Invalid inputs." };
+    return { success: false, error: "Invalid inputs." };
   }
 
   try {
@@ -24,9 +24,9 @@ export async function createExam(data: FormData) {
     });
     revalidatePath("/lecturer/exams");
     revalidatePath("/lecturer/courses");
-    return { success: true, exam };
+    return { success: true, message: "Exam created successfully!", exam };
   } catch (e) {
-    return { error: "Failed to create exam" };
+    return { success: false, error: "Failed to create exam" };
   }
 }
 
@@ -41,7 +41,7 @@ export async function updateExamStatus(id: string, status: string) {
 
       const questionCount = Number(countRows[0]?.count ?? 0);
       if (questionCount < 1) {
-        return { error: "Cannot start exam without questions. Add at least one question first." };
+        return { success: false, error: "Cannot start exam without questions. Add at least one question first." };
       }
     }
 
@@ -50,8 +50,8 @@ export async function updateExamStatus(id: string, status: string) {
       data: { status }
     });
     revalidatePath("/lecturer/exams");
-    return { success: true };
+    return { success: true, message: `Exam status updated to ${status}!` };
   } catch (e) {
-    return { error: "Failed to update exam status" };
+    return { success: false, error: "Failed to update exam status" };
   }
 }

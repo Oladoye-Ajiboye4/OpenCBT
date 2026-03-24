@@ -41,7 +41,7 @@ export function BulkCourseUpload({
       header: true,
       skipEmptyLines: true,
       complete: async (results) => {
-        const data = results.data as any[];
+        const data = results.data as Array<Record<string, string>>;
         
         // Validate headers
         const requiredHeaders = ["courseCode", "courseTitle"];
@@ -67,11 +67,11 @@ export function BulkCourseUpload({
         setIsUploading(false);
 
         if (res.success) {
-          toast.success(res.message);
+          toast.success(res.message || "Courses uploaded successfully!");
           onSuccess();
           onClose();
         } else {
-          toast.error(res.message);
+          toast.error(res.error || "Upload failed");
         }
       },
       error: (error) => {

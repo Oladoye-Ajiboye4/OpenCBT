@@ -26,7 +26,7 @@ type Course = {
 type Exam = {
   id: string;
   title: string;
-  scheduledDate: string;
+  scheduledDate: string | Date;
   status: string;
   course: Course;
 };
@@ -92,7 +92,7 @@ export function ProvisionClient({ exams }: { exams: Exam[] }) {
     }
   };
 
-  const formatDate = (dateStr: string) =>
+  const formatDate = (dateStr: string | Date) =>
     new Date(dateStr).toLocaleString("en-US", {
       weekday: "short",
       month: "short",
@@ -231,10 +231,9 @@ export function ProvisionClient({ exams }: { exams: Exam[] }) {
             w-full relative h-16 rounded-2xl font-black text-lg tracking-tight text-white
             transition-all duration-200 shadow-lg
             flex items-center justify-center gap-3
-            ${
-              isSubmitting
-                ? "bg-primary/70 cursor-wait"
-                : selectedExamId
+            ${isSubmitting
+              ? "bg-primary/70 cursor-wait"
+              : selectedExamId
                 ? "bg-primary hover:bg-primary/90 active:scale-[0.99] hover:shadow-xl cursor-pointer"
                 : "bg-primary/40 cursor-not-allowed"
             }

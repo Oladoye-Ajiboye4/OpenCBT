@@ -23,7 +23,7 @@ export async function createStudent(data: FormData) {
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0].message };
+    return { success: false, error: parsed.error.issues[0].message || "Validation failed" };
   }
 
   const { firstName, lastName, email, departmentId, level } = parsed.data;
@@ -43,7 +43,7 @@ export async function createStudent(data: FormData) {
 
       await prisma.$transaction([
         prisma.student.create({
-          data: { firstName, lastName, email, matricNumber, departmentId, level, id: Date.now().toString() }, // Ensure dummy ID or let Supabase auth insert ID. For admin inserts, if no auth is hooked, we need a unique ID.
+          data: { firstName, lastName, email, matricNumber, departmentId, level, id: Date.now().toString() },
         }),
         prisma.institution.update({
           where: { id: institution.id },
@@ -51,18 +51,19 @@ export async function createStudent(data: FormData) {
         })
       ]);
     } else {
-      if (!matricNumber) return { error: "Matric Number is required in Manual Mode" };
+      if (!matricNumber) return { success: false, error: "Matric Number is required in Manual Mode" };
       await prisma.student.create({
         data: { firstName, lastName, email, matricNumber, departmentId, level, id: Date.now().toString() },
       });
     }
 
     revalidatePath("/admin/students");
-    return { success: true };
-  } catch (error: any) {
+    return { success: true, message: "Student created successfully!" };
+  } catch (error: unknown) {
     console.error("Student Creation Error:", error);
-    if (error.code === 'P2002') return { error: "Student with this Matric Number or Email already exists" };
-    return { error: "Failed to create Student" };
+    const err = error as Record<string, unknown>;
+    if (err.code === 'P2002') return { success: false, error: "Student with this Matric Number or Email already exists" };
+    return { success: false, error: "Failed to create Student" };
   }
 }
 
@@ -71,9 +72,9 @@ export async function deleteStudent(id: string) {
   try {
     await prisma.student.delete({ where: { id } });
     revalidatePath("/admin/students");
-    return { success: true };
+    return { success: true, message: "Student deleted successfully." };
   } catch (error) {
-    return { error: "Failed to delete Student" };
+    return { success: false, error: "Failed to delete Student" };
   }
 }
 
@@ -88,10 +89,11 @@ export async function updateStudent(id: string, data: FormData) {
       data: { firstName, lastName, matricNumber },
     });
     revalidatePath("/admin/students");
-    return { success: true };
-  } catch (error: any) {
-    if (error.code === 'P2002') return { error: "Matric Number already in use" };
-    return { error: "Failed to update Student" };
+    return { success: true, message: "Student updated successfully!" };
+  } catch (error: unknown) {
+    const err = error as Record<string, unknown>;
+    if (err.code === 'P2002') return { success: false, error: "Matric Number already in use" };
+    return { success: false, error: "Failed to update Student" };
   }
 }
 
@@ -102,15 +104,15 @@ export async function getStudents({ departmentId, level }: { departmentId: strin
       include: { department: true },
       orderBy: { lastName: 'asc' }
     });
-    return { students };
+    return { success: true, students };
   } catch (error) {
-    return { error: "Failed to fetch students" };
+    return { success: false, error: "Failed to fetch Students" };
   }
 }
 
-export async function uploadStudentsCSV(records: any[], departmentId: string, level: string) {
+export async function uploadStudentsCSV(records: Array<Record<string, unknown>>, departmentId: string, level: string) {
   if (!departmentId || !level || !records || records.length === 0) {
-    return { error: "Invalid data or missing selections" };
+    return { success: false, error: "Invalid data or missing selections" };
   }
 
   try {
@@ -119,13 +121,15 @@ export async function uploadStudentsCSV(records: any[], departmentId: string, le
     let currentSerial = institution?.matricSerialTracker || 0;
     const year = new Date().getFullYear();
 
-    await prisma.$transaction(async (tx: any) => {
+    await prisma.$transaction(async (tx) => {
       for (const record of records) {
-        if (!record.firstName || !record.lastName) {
+        const firstName = record.firstName as string;
+        const lastName = record.lastName as string;
+        if (!firstName || !lastName) {
           throw new Error("CSV missing required columns");
         }
 
-        let matricNumber = record.matricNumber;
+        let matricNumber = record.matricNumber as string | undefined;
         if (isAuto) {
           currentSerial++;
           matricNumber = `${year}${String(currentSerial).padStart(5, '0')}`;
@@ -135,9 +139,10 @@ export async function uploadStudentsCSV(records: any[], departmentId: string, le
 
         await tx.student.create({
           data: {
-            firstName: record.firstName,
-            lastName: record.lastName,
-            matricNumber,
+            firstName,
+            lastName,
+            matricNumber: matricNumber || `${year}${String(currentSerial).padStart(5, '0')}`,
+            email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}@student.local`,
             departmentId,
             level
           }
@@ -153,11 +158,12 @@ export async function uploadStudentsCSV(records: any[], departmentId: string, le
     });
 
     revalidatePath("/admin/students");
-    return { success: true };
-  } catch (error: any) {
-    if (error.code === 'P2002') {
-      return { error: "Upload failed: Duplicate Matric Number detected." };
+    return { success: true, message: "CSV Uploaded successfully!" };
+  } catch (error: unknown) {
+    const err = error as Record<string, unknown>;
+    if (err.code === 'P2002') {
+      return { success: false, error: "Upload failed: Duplicate Matric Number detected." };
     }
-    return { error: error.message || "Failed to bulk upload students" };
+    return { success: false, error: (err as any)?.message || "Failed to bulk upload students" };
   }
 }

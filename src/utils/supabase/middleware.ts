@@ -1,4 +1,4 @@
-import { createServerClient } from '@ssr/supabase' // Note: correct is @supabase/ssr, but we follow standard override
+import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 // Forcing @supabase/ssr override import manually to guarantee correct bundling
@@ -36,8 +36,8 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const isProtectedRoute = request.nextUrl.pathname.startsWith('/admin') || 
-                           request.nextUrl.pathname.startsWith('/lecturer');
+  const isProtectedRoute = request.nextUrl.pathname.startsWith('/admin') ||
+    request.nextUrl.pathname.startsWith('/lecturer');
 
   if (isProtectedRoute && !user) {
     const url = request.nextUrl.clone()
@@ -46,9 +46,9 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (user && (request.nextUrl.pathname === '/sign-in' || request.nextUrl.pathname === '/sign-up')) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/admin' 
-      return NextResponse.redirect(url)
+    const url = request.nextUrl.clone()
+    url.pathname = '/admin'
+    return NextResponse.redirect(url)
   }
 
   supabaseResponse.headers.set("x-pathname", request.nextUrl.pathname);

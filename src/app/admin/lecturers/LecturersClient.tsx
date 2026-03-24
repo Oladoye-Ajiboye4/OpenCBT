@@ -91,7 +91,7 @@ export function LecturersClient({ faculties }: { faculties: Faculty[] }) {
       const res = await createLecturer(formData);
       if (res?.error) toast.error(res.error);
       else {
-        toast.success("Lecturer provisioned successfully!");
+        toast.success(res?.message || "Lecturer provisioned successfully!");
         form.reset();
         setCreateFacId("");
         if (filterDeptId) handleFilter();
@@ -109,7 +109,7 @@ export function LecturersClient({ faculties }: { faculties: Faculty[] }) {
       const res = await deleteLecturer(id);
       if (res?.error) toast.error(res.error);
       else {
-        toast.success("Lecturer access revoked!");
+        toast.success(res?.message || "Lecturer access revoked!");
         setLecturers(prev => prev.filter(l => l.id !== id));
       }
     } catch {
@@ -129,10 +129,10 @@ export function LecturersClient({ faculties }: { faculties: Faculty[] }) {
       complete: async (results) => {
         try {
           const data = results.data;
-          const res = await uploadLecturersCSV(data, csvDeptId);
+          const res = await uploadLecturersCSV(data as Record<string, unknown>[], csvDeptId);
           if (res?.error) toast.error(res.error);
           else {
-            toast.success("CSV Uploaded successfully!");
+            toast.success(res?.message || "CSV Uploaded successfully!");
             setShowCSVModal(false);
             if (filterDeptId === csvDeptId) handleFilter();
           }

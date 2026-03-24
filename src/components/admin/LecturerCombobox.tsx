@@ -5,6 +5,13 @@ import { Check, ChevronsUpDown, Search } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { getLecturers } from "@/actions/course";
 
+interface Lecturer {
+  id: string;
+  name: string | null;
+  staffId: string | null;
+  email: string;
+}
+
 interface LecturerComboboxProps {
   departmentId: string;
   value: string;
@@ -13,7 +20,7 @@ interface LecturerComboboxProps {
 
 export function LecturerCombobox({ departmentId, value, onChange }: LecturerComboboxProps) {
   const [open, setOpen] = useState(false);
-  const [lecturers, setLecturers] = useState<any[]>([]);
+  const [lecturers, setLecturers] = useState<Lecturer[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   
